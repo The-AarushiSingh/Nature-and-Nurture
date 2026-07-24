@@ -1,0 +1,37 @@
+const express = require("express");
+const router = express.Router();
+const Plant = require("../models/Plant");
+
+// GET all plants (supports optional search & filters later)
+router.get("/", async (req, res) => {
+  try {
+    const plants = await Plant.find();
+    res.json(plants);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET single plant by ID
+router.get("/:id", async (req, res) => {
+  try {
+    const plant = await Plant.findById(req.params.id);
+    if (!plant) return res.status(404).json({ error: "Plant not found" });
+    res.json(plant);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// POST create a new plant
+router.post("/", async (req, res) => {
+  try {
+    const newPlant = new Plant(req.body);
+    const savedPlant = await newPlant.save();
+    res.status(201).json(savedPlant);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+module.exports = router;
