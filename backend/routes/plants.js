@@ -3,15 +3,31 @@ const router = express.Router();
 const Plant = require("../models/Plant");
 
 // GET all plants (supports optional search & filters later)
+// GET all plants (supports search & filters via query params)
 router.get("/", async (req, res) => {
   try {
-    const plants = await Plant.find();
+    const { search, category, difficulty, sunlight, water } = req.query;
+    const query = {};
+
+    if (search) {
+      query.$or = [
+        { commonName: { $regex: search, $options: "i" } },
+        { botanicalName: { $regex: search, $options: "i" } },
+        { tags: { $regex: search, $options: "i" } },
+      ];
+    }
+
+    if (category) query.category = category;
+    if (difficulty) query["careGuide.difficulty"] = difficulty;
+    if (sunlight) query["careGuide.sunlight"] = sunlight;
+    if (water) query["careGuide.water"] = water;
+
+    const plants = await Plant.find(query);
     res.json(plants);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
-
 // GET single plant by ID
 router.get("/:id", async (req, res) => {
   try {
