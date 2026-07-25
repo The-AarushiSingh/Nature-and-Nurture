@@ -10,6 +10,7 @@ app.use(cors());
 app.use(express.json());
 app.use("/api/plants", require("./routes/plants"));
 app.use("/api/auth", require("./routes/auth"));
+app.use("/api/garden", require("./routes/garden"));
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI)

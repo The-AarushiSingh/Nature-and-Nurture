@@ -123,14 +123,14 @@ export default function AuthPage() {
             <button
               type="button"
               onClick={() => alert("Google sign-in coming soon!")}
-              className="border border-gray-300 rounded-lg py-2 text-sm font-medium hover:bg-gray-50 transition-colors"
+              className="border border-gray-300 rounded-lg py-2 text-sm font-medium text-black hover:bg-gray-50 transition-colors"
             >
               Google
             </button>
             <button
               type="button"
               onClick={() => alert("Apple sign-in coming soon!")}
-              className="border border-gray-300 rounded-lg py-2 text-sm font-medium hover:bg-gray-50 transition-colors"
+              className="border border-gray-300 rounded-lg py-2 text-sm  text-black font-medium hover:bg-gray-50 transition-colors"
             >
               Apple
             </button>
@@ -151,7 +151,7 @@ export default function AuthPage() {
           <form onSubmit={handleSubmit}>
             {mode === "signup" && (
               <div className="mb-3">
-                <label className="text-sm font-medium text-gray-700">
+                <label className="text-sm font-medium  text-gray-700">
                   Full name
                 </label>
                 <input
@@ -174,7 +174,7 @@ export default function AuthPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-primary/40"
+                className="w-full border border-gray-300  text-black rounded-lg px-4 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-primary/40"
               />
             </div>
 
@@ -187,7 +187,7 @@ export default function AuthPage() {
                   <button
                     type="button"
                     onClick={() => alert("Password reset coming soon!")}
-                    className="text-xs text-primary font-medium"
+                    className="text-xs text-primary font-medium "
                   >
                     Forgot password?
                   </button>

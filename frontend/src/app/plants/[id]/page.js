@@ -2,9 +2,13 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
+import { useAuth } from "@/context/AuthContext";
 
 export default function PlantProfile() {
   const { id } = useParams();
+  const { token, user } = useAuth();
+  const [saved, setSaved] = useState(false);
+  const [saving, setSaving] = useState(false);
   const [plant, setPlant] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -21,15 +25,45 @@ export default function PlantProfile() {
       });
   }, [id]);
 
-  if (loading)
-    return <p className="p-10 text-muted">Loading plant...</p>;
-  if (!plant)
-    return <p className="p-10 text-muted">Plant not found.</p>;
+  const handleSaveToGarden = async () => {
+    if (!user) {
+      alert("Please log in to save plants to your garden.");
+      return;
+    }
+
+    setSaving(true);
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/garden/${id}`,
+        {
+          method: "POST",
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
+      const data = await res.json();
+
+      if (res.ok) {
+        setSaved(true);
+      } else {
+        alert(data.error || "Something went wrong");
+      }
+    } catch (err) {
+      alert("Could not connect to server");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  if (loading) return <p className="p-10 text-muted">Loading plant...</p>;
+  if (!plant) return <p className="p-10 text-muted">Plant not found.</p>;
 
   return (
     <main className="min-h-screen bg-cream">
       <div className="max-w-4xl mx-auto px-6 py-12">
-        <Link href="/" className="text-sm text-primary hover:underline mb-6 inline-block">
+        <Link
+          href="/"
+          className="text-sm text-primary hover:underline mb-6 inline-block"
+        >
           ← Back to all plants
         </Link>
 
@@ -46,6 +80,21 @@ export default function PlantProfile() {
             </span>
           ))}
         </div>
+        <button
+          onClick={handleSaveToGarden}
+          disabled={saved || saving}
+          className={`mb-6 px-5 py-2 rounded-full text-sm font-medium transition-colors ${
+            saved
+              ? "bg-gray-100 text-gray-500 cursor-not-allowed"
+              : "bg-primary text-white hover:bg-primary-light"
+          }`}
+        >
+          {saved
+            ? "✓ Saved to Garden"
+            : saving
+              ? "Saving..."
+              : "+ Save to Garden"}
+        </button>
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 bg-white border border-gray-200 rounded-2xl p-5 mb-8">
           <div>
@@ -57,12 +106,20 @@ export default function PlantProfile() {
             <p className="font-medium text-gray-900">{plant.origin}</p>
           </div>
           <div>
-            <p className="text-xs text-muted uppercase tracking-wide">Difficulty</p>
-            <p className="font-medium text-gray-900">{plant.careGuide?.difficulty}</p>
+            <p className="text-xs text-muted uppercase tracking-wide">
+              Difficulty
+            </p>
+            <p className="font-medium text-gray-900">
+              {plant.careGuide?.difficulty}
+            </p>
           </div>
           <div>
-            <p className="text-xs text-muted uppercase tracking-wide">Growth Rate</p>
-            <p className="font-medium text-gray-900">{plant.careGuide?.growthRate}</p>
+            <p className="text-xs text-muted uppercase tracking-wide">
+              Growth Rate
+            </p>
+            <p className="font-medium text-gray-900">
+              {plant.careGuide?.growthRate}
+            </p>
           </div>
         </div>
 
@@ -72,35 +129,64 @@ export default function PlantProfile() {
         </section>
 
         <section className="mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 mb-3">Care Guide</h2>
+          <h2 className="text-xl font-semibold text-gray-900 mb-3">
+            Care Guide
+          </h2>
           <div className="bg-white border border-gray-200 rounded-2xl p-5 grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-            <p>☀️ <span className="text-muted">Sunlight:</span> {plant.careGuide?.sunlight}</p>
-            <p>💧 <span className="text-muted">Water:</span> {plant.careGuide?.water}</p>
-            <p>🌱 <span className="text-muted">Soil:</span> {plant.careGuide?.soil}</p>
-            <p>⏱️ <span className="text-muted">Harvest Time:</span> {plant.careGuide?.harvestTime}</p>
-            <p>🌍 <span className="text-muted">Climate:</span> {plant.careGuide?.climate?.join(", ")}</p>
-            <p>🪴 <span className="text-muted">Part Used:</span> {plant.careGuide?.partUsed}</p>
+            <p>
+              ☀️ <span className="text-muted">Sunlight:</span>{" "}
+              {plant.careGuide?.sunlight}
+            </p>
+            <p>
+              💧 <span className="text-muted">Water:</span>{" "}
+              {plant.careGuide?.water}
+            </p>
+            <p>
+              🌱 <span className="text-muted">Soil:</span>{" "}
+              {plant.careGuide?.soil}
+            </p>
+            <p>
+              ⏱️ <span className="text-muted">Harvest Time:</span>{" "}
+              {plant.careGuide?.harvestTime}
+            </p>
+            <p>
+              🌍 <span className="text-muted">Climate:</span>{" "}
+              {plant.careGuide?.climate?.join(", ")}
+            </p>
+            <p>
+              🪴 <span className="text-muted">Part Used:</span>{" "}
+              {plant.careGuide?.partUsed}
+            </p>
           </div>
         </section>
 
         <section className="mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 mb-3">Medicinal Uses</h2>
+          <h2 className="text-xl font-semibold text-gray-900 mb-3">
+            Medicinal Uses
+          </h2>
           <ul className="space-y-1.5">
             {plant.medicinalUses?.map((use) => (
-              <li key={use} className="text-gray-700 text-sm">✔️ {use}</li>
+              <li key={use} className="text-gray-700 text-sm">
+                ✔️ {use}
+              </li>
             ))}
           </ul>
         </section>
 
         <section className="mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">Active Compounds</h2>
-          <p className="text-gray-700 text-sm">{plant.activeCompounds?.join(", ")}</p>
+          <h2 className="text-xl font-semibold text-gray-900 mb-2">
+            Active Compounds
+          </h2>
+          <p className="text-gray-700 text-sm">
+            {plant.activeCompounds?.join(", ")}
+          </p>
         </section>
 
         {plant.precautions && (
           <section className="bg-amber-50 border border-amber-200 rounded-2xl p-4">
             <p className="text-sm text-amber-900">
-              <span className="font-semibold">⚠️ Precautions:</span> {plant.precautions}
+              <span className="font-semibold">⚠️ Precautions:</span>{" "}
+              {plant.precautions}
             </p>
           </section>
         )}
