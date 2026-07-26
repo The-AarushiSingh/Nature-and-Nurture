@@ -14,6 +14,7 @@ app.use("/api/auth", require("./routes/auth"));
 app.use("/api/garden", require("./routes/garden"));
 app.use("/api/assistant", require("./routes/assistant"));
 app.use("/api/diagnosis", require("./routes/diagnosis"));
+app.use("/api/plant-id", require("./routes/plantId"));
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI)
