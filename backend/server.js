@@ -7,11 +7,13 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(cors());
-app.use(express.json());
+//Base64-encoded images are roughly 33% larger than the original file, and photos can easily be a few MB — without raising this limit, Express would reject the request with a "payload too large" error before it even reaches our route.
+app.use(express.json({ limit: "10mb" }));
 app.use("/api/plants", require("./routes/plants"));
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/garden", require("./routes/garden"));
 app.use("/api/assistant", require("./routes/assistant"));
+app.use("/api/diagnosis", require("./routes/diagnosis"));
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI)
