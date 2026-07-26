@@ -29,6 +29,7 @@ const plantSchema = new mongoose.Schema({
   images: [{ type: String }], // URLs
 
   studiesCited: { type: Number, default: 0 },
+  embedding: { type: [Number], default: [] },
 
   createdAt: { type: Date, default: Date.now },
 });
