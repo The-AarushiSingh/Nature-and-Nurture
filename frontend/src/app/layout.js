@@ -1,9 +1,10 @@
 import "./globals.css";
-import { Fraunces, Inter } from "next/font/google";
 import { AuthProvider } from "@/context/AuthContext";
 import Navbar from "@/components/Navbar";
 
-const fraunces = Fraunces({
+import { Space_Grotesk, Inter } from "next/font/google";
+
+const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
   variable: "--font-display",
   display: "swap",
@@ -17,7 +18,7 @@ const inter = Inter({
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${fraunces.variable} ${inter.variable}`}>
+    <html lang="en" className={`${spaceGrotesk.variable} ${inter.variable}`}>
       <body>
         <AuthProvider>
           <Navbar />
