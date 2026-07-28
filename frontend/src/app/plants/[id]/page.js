@@ -61,13 +61,21 @@ export default function PlantProfile() {
     <main className="min-h-screen bg-cream">
       <div className="max-w-4xl mx-auto px-6 py-12">
         <Link
-          href="/"
+          href="/explore"
           className="text-sm text-primary hover:underline mb-6 inline-block"
         >
           ← Back to all plants
         </Link>
 
-        <h1 className="text-3xl font-bold text-gray-900">{plant.commonName}</h1>
+        <h1 className="text-3xl font-bold text-gray-900">
+          {plant.commonName}
+          {plant.hindiName && (
+            <span className="text-2xl font-normal text-muted">
+              {" "}
+              · {plant.hindiName}
+            </span>
+          )}
+        </h1>
         <p className="italic text-muted mb-4">{plant.botanicalName}</p>
 
         <div className="flex flex-wrap gap-1.5 mb-6">

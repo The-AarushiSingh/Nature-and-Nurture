@@ -4,6 +4,7 @@ const plantSchema = new mongoose.Schema({
   commonName: { type: String, required: true },
   botanicalName: { type: String, required: true },
   sanskritName: { type: String },
+  hindiName: { type: String },
   family: { type: String },
   origin: { type: String },
   category: { type: String }, // e.g. "Stress Relief", "Immunity"

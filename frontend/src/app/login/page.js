@@ -29,7 +29,7 @@ export default function AuthPage() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(body),
-        }
+        },
       );
 
       const data = await res.json();
@@ -48,40 +48,103 @@ export default function AuthPage() {
 
   return (
     <div className="min-h-screen grid grid-cols-1 md:grid-cols-2">
-      {/* Left panel - image + quote */}
-      <div className="hidden md:flex relative bg-gradient-to-br from-gray-900 via-gray-800 to-primary/40 flex-col justify-between p-10 overflow-hidden">
-        <div className="flex items-center gap-2 z-10">
-          <div className="bg-primary w-8 h-8 rounded-lg flex items-center justify-center text-white text-sm">
-            🌿
+      {/* Left panel - real image + quote */}
+      <div
+        className="hidden md:flex relative overflow-hidden bg-cover bg-center p-12"
+        style={{ backgroundImage: "url('/images/login-hero.jpg')" }}
+      >
+        {/* Dark overlay */}
+        <div className="absolute inset-0 bg-gradient-to-br from-black/60 via-black/40 to-black/60" />
+
+        {/* Brand - Top Left */}
+        <div className="absolute top-12 left-12 z-10 flex items-center gap-3">
+          <div className="h-11 w-11 rounded-full border border-white/20 bg-white/10 backdrop-blur-md flex items-center justify-center">
+            <img
+              src="/images/logo.jpg"
+              alt="Nature & Nurture"
+              className="h-12 w-12 object-contain"
+            />
           </div>
-          <span className="text-white font-semibold text-lg">
-            Nature <span className="font-normal text-gray-300">&</span> Nurture
-          </span>
+
+          <div>
+            <p className="text-white text-lg font-semibold tracking-wide">
+              Nature & Nurture
+            </p>
+          </div>
         </div>
 
-        <div className="z-10">
-          <p className="text-white text-xl italic leading-relaxed mb-2">
-            "The art of healing comes from nature, not from the physician."
+        {/* Hero Text */}
+        <div className="absolute top-[30%] left-12 z-10 max-w-lg">
+          <p
+            className="text-white text-4xl font-semibold tracking-wide"
+            style={{
+              textShadow:
+                "0 2px 8px rgba(0,0,0,.45), 0 10px 30px rgba(0,0,0,.35)",
+            }}
+          >
+            स्वास्थ्यम् धनसम्पदा
           </p>
-          <p className="text-gray-400 text-sm">— Paracelsus</p>
+
+          <h1
+            className="
+        mt-3
+        text-6xl
+        font-semibold
+        leading-[1.05]
+        tracking-tight
+        font-[family-name:var(--font-display)]
+        bg-gradient-to-r
+        from-white
+        via-stone-100
+        to-green-100
+        bg-clip-text
+        text-transparent
+      "
+            style={{
+              textShadow:
+                "0 2px 8px rgba(0,0,0,.35), 0 10px 30px rgba(0,0,0,.25)",
+            }}
+          >
+            Health is
+            <br />
+            true wealth.
+          </h1>
+
+          <p className="mt-6 max-w-md text-lg leading-relaxed text-stone-100">
+            A tradition older than modern medicine.
+          </p>
         </div>
 
-        <div className="z-10 flex gap-8">
-          <div>
-            <p className="text-white text-2xl font-bold">15+</p>
-            <p className="text-gray-400 text-sm">Medicinal plants</p>
-          </div>
-          <div>
-            <p className="text-white text-2xl font-bold">AI</p>
-            <p className="text-gray-400 text-sm">Powered assistant</p>
-          </div>
-          <div>
-            <p className="text-white text-2xl font-bold">Free</p>
-            <p className="text-gray-400 text-sm">To get started</p>
+        {/* Bottom Stats */}
+        <div className="absolute bottom-10 left-12 right-12 z-10">
+          <div className="flex items-center gap-10 rounded-2xl border border-white/15 bg-white/10 px-6 py-5 backdrop-blur-md">
+            <div>
+              <p className="text-3xl font-bold text-white font-[family-name:var(--font-display)]">
+                35+
+              </p>
+              <p className="mt-1 text-sm text-white/75">Curated Plants</p>
+            </div>
+
+            <div className="h-10 w-px bg-white/20" />
+
+            <div>
+              <p className="text-3xl font-bold text-white font-[family-name:var(--font-display)]">
+                AI
+              </p>
+              <p className="mt-1 text-sm text-white/75">Powered Assistant</p>
+            </div>
+
+            <div className="h-10 w-px bg-white/20" />
+
+            <div>
+              <p className="text-3xl font-bold text-white font-[family-name:var(--font-display)]">
+                Free
+              </p>
+              <p className="mt-1 text-sm text-white/75">To Get Started</p>
+            </div>
           </div>
         </div>
       </div>
-
       {/* Right panel - form */}
       <div className="flex items-center justify-center bg-cream px-6 py-12">
         <div className="w-full max-w-sm">
@@ -92,7 +155,7 @@ export default function AuthPage() {
               className={`flex-1 py-2 rounded-full text-sm font-medium transition-colors ${
                 mode === "signin"
                   ? "bg-white shadow-sm text-gray-900"
-                  : "text-muted"
+                  : "text-muted hover:text-gray-900 hover:bg-white/50"
               }`}
             >
               Sign In
@@ -115,7 +178,7 @@ export default function AuthPage() {
           <p className="text-muted text-sm mb-6">
             {mode === "signin"
               ? "Sign in to your Nature & Nurture account."
-              : "Start your medicinal plant journey today."}
+              : "Start your journey today."}
           </p>
 
           {/* OAuth buttons - visual only for now */}
@@ -123,16 +186,37 @@ export default function AuthPage() {
             <button
               type="button"
               onClick={() => alert("Google sign-in coming soon!")}
-              className="border border-gray-300 rounded-lg py-2 text-sm font-medium text-black hover:bg-gray-50 transition-colors"
+              className="
+    border border-gray-300
+    rounded-xl
+    py-2.5
+    text-sm
+    font-medium
+    text-gray-800
+    transition-all
+    duration-200
+    hover:border-emerald-800
+  "
             >
               Google
             </button>
+
             <button
               type="button"
-              onClick={() => alert("Apple sign-in coming soon!")}
-              className="border border-gray-300 rounded-lg py-2 text-sm  text-black font-medium hover:bg-gray-50 transition-colors"
+              onClick={() => alert("GitHub sign-in coming soon!")}
+              className="
+    border border-gray-300
+    rounded-xl
+    py-2.5
+    text-sm
+    font-medium
+    text-gray-800
+    transition-all
+    duration-200
+    hover:border-emerald-800
+  "
             >
-              Apple
+              GitHub
             </button>
           </div>
 

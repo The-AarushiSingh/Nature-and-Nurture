@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 
 const steps = [
@@ -65,6 +65,13 @@ export default function RecommendationsPage() {
   const [results, setResults] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    const saved = sessionStorage.getItem("recommendationResults");
+    if (saved) {
+      setResults(JSON.parse(saved));
+    }
+  }, []);
+
   const current = steps[step];
 
   const handleSelect = (value) => {
@@ -95,10 +102,11 @@ export default function RecommendationsPage() {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(answers),
-          }
+          },
         );
         const data = await res.json();
         setResults(data);
+        sessionStorage.setItem("recommendationResults", JSON.stringify(data));
       } catch (err) {
         console.error(err);
       } finally {
@@ -111,6 +119,7 @@ export default function RecommendationsPage() {
     setAnswers({ goals: [] });
     setStep(0);
     setResults(null);
+    sessionStorage.removeItem("recommendationResults");
   };
 
   const canProceed = current?.multi
@@ -137,7 +146,8 @@ export default function RecommendationsPage() {
 
         {results.length === 0 ? (
           <div className="bg-white border border-gray-200 rounded-2xl p-10 text-center text-muted">
-            No strong matches found — try different answers, or browse the full collection.
+            No strong matches found — try different answers, or browse the full
+            collection.
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -149,8 +159,12 @@ export default function RecommendationsPage() {
               >
                 <div className="flex justify-between items-start mb-2">
                   <div>
-                    <h3 className="font-semibold text-gray-900">{r.commonName}</h3>
-                    <p className="italic text-xs text-muted">{r.botanicalName}</p>
+                    <h3 className="font-semibold text-gray-900">
+                      {r.commonName}
+                    </h3>
+                    <p className="italic text-xs text-muted">
+                      {r.botanicalName}
+                    </p>
                   </div>
                   <span className="text-sm font-bold text-primary">
                     {r.matchScore}%
@@ -175,7 +189,9 @@ export default function RecommendationsPage() {
     <main className="max-w-2xl mx-auto px-6 py-10">
       <div className="mb-8">
         <div className="flex justify-between text-xs text-muted mb-2">
-          <span>Step {step + 1} of {steps.length}</span>
+          <span>
+            Step {step + 1} of {steps.length}
+          </span>
           <span>{Math.round(((step + 1) / steps.length) * 100)}%</span>
         </div>
         <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
@@ -230,8 +246,8 @@ export default function RecommendationsPage() {
           {loading
             ? "Finding matches..."
             : step === steps.length - 1
-            ? "Get My Recommendations"
-            : "Continue →"}
+              ? "Get My Recommendations"
+              : "Continue →"}
         </button>
       </div>
     </main>

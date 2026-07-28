@@ -1,11 +1,17 @@
 "use client";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 
 export default function Navbar() {
   const { user, logout, loading } = useAuth();
   const router = useRouter();
+  const pathname = usePathname();
+
+if (pathname === "/login") {
+  return null;
+}
 
   const handleLogout = () => {
     logout();
@@ -25,7 +31,7 @@ export default function Navbar() {
         </Link>
 
         <div className="flex items-center gap-5 text-sm">
-          <Link href="/" className="text-gray-700 hover:text-primary">
+          <Link href="/explore" className="text-gray-700 hover:text-primary">
             Explore
           </Link>
 
