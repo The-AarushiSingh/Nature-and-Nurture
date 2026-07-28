@@ -10,6 +10,9 @@
 
   --font-display: "Fraunces", serif;
   --font-body: "Inter", sans-serif;
+
+  --color-clay: #B5533C;
+--color-berry: #7A4B6B;
 }
 
 body {
