@@ -182,7 +182,7 @@ export default function AuthPage() {
           </p>
 
           {/* OAuth buttons - visual only for now */}
-          <div className="grid grid-cols-2 gap-3 mb-5">
+          {/* <div className="grid grid-cols-2 gap-3 mb-5">
             <button
               type="button"
               onClick={() => alert("Google sign-in coming soon!")}
@@ -218,13 +218,13 @@ export default function AuthPage() {
             >
               GitHub
             </button>
-          </div>
+          </div> */}
 
-          <div className="flex items-center gap-3 mb-5">
+          {/* <div className="flex items-center gap-3 mb-5">
             <div className="flex-1 h-px bg-gray-200" />
             <span className="text-xs text-muted">or continue with email</span>
             <div className="flex-1 h-px bg-gray-200" />
-          </div>
+          </div> */}
 
           {error && (
             <p className="text-red-600 text-sm bg-red-50 border border-red-200 rounded-lg p-2 mb-4">

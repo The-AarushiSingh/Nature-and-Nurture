@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 
@@ -25,7 +25,7 @@ function slugify(name) {
   return name.toLowerCase().replace(/[()]/g, "").replace(/\s+/g, "-");
 }
 
-export default function Explore() {
+function ExploreContent() {
   const searchParams = useSearchParams();
   const { token, user } = useAuth();
   const [plants, setPlants] = useState([]);
@@ -248,5 +248,14 @@ export default function Explore() {
         </div>
       </div>
     </main>
+  );
+}
+
+
+export default function Explore() {
+  return (
+    <Suspense fallback={<div className="p-10 text-muted">Loading...</div>}>
+      <ExploreContent />
+    </Suspense>
   );
 }

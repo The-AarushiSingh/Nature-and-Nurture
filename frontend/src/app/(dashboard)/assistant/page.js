@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
@@ -13,7 +13,7 @@ const suggestions = [
   { icon: "🍳", text: "What can I use to garnish my food?" },
 ];
 
-export default function AssistantPage() {
+function AssistantContent() {
   const searchParams = useSearchParams();
   const { token } = useAuth();
 
@@ -925,4 +925,12 @@ nature-scroll
   </div>
 );
 
+}
+
+export default function AssistantPage() {
+  return (
+    <Suspense fallback={<div className="p-10 text-muted">Loading...</div>}>
+      <AssistantContent />
+    </Suspense>
+  );
 }
