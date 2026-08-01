@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
+import Image from "next/image";
 
 export default function Navbar() {
   const { user, logout, loading } = useAuth();
@@ -19,34 +20,40 @@ export default function Navbar() {
   return (
     <nav className="sticky top-0 z-50 bg-cream/80 backdrop-blur-xl">
       <div className="max-w-7xl mx-auto px-8 py-5">
-
-        <div className="
+        <div
+          className="
           flex items-center justify-between
           rounded-full
           border border-primary/10
           bg-white/70
           px-6 py-3
           shadow-[0_10px_40px_rgba(31,61,43,0.08)]
-        ">
-
+        "
+        >
           {/* Logo */}
-          <Link 
-            href="/"
-            className="flex items-center gap-3 group"
-          >
-            <div className="
-              w-10 h-10
-              rounded-full
-              bg-primary
-              flex items-center justify-center
-              text-white
-              text-lg
-              rotate-[-8deg]
-              group-hover:rotate-0
-              transition-transform
-            ">
-              🌿
-            </div>
+          <Link href="/" className="flex items-center gap-3 group">
+            <div
+  className="
+    w-10 h-10
+    rounded-full
+    overflow-hidden
+    bg-primary
+    flex items-center justify-center
+    shadow-lg
+    ring-2 ring-white/40
+    group-hover:scale-110
+    transition-transform
+  "
+>
+  <Image
+    src="/images/logo.jpg"
+    alt="Nature & Nurture logo"
+    width={40}
+    height={40}
+    className="w-full h-full object-cover"
+  />
+</div>
+
 
             <div className="leading-none">
               <p
@@ -62,28 +69,30 @@ export default function Navbar() {
                 Nurture
               </p>
 
-              <p className="
+              <p
+                className="
                 text-[10px]
                 uppercase
                 tracking-[0.25em]
                 text-primary/50
                 mt-1
-              ">
+              "
+              >
                 Botanical Intelligence
               </p>
             </div>
           </Link>
 
-
           {/* Center links */}
-          <div className="
+          <div
+            className="
             hidden md:flex
             items-center
             gap-8
             text-sm
             font-medium
-          ">
-
+          "
+          >
             <Link
               href="/explore"
               className="
@@ -104,18 +113,16 @@ export default function Navbar() {
               Explore Plants
             </Link>
 
-
             <Link
-              href="/assistant"
+              href="/dashboard"
               className="
                 text-gray-600
                 hover:text-primary
                 transition
               "
             >
-              AI Assistant
+              Dashboard
             </Link>
-
 
             <Link
               href="/garden"
@@ -127,29 +134,27 @@ export default function Navbar() {
             >
               My Garden
             </Link>
-
           </div>
-
-
 
           {/* Right */}
           <div className="flex items-center gap-4">
-
             {!loading && (
               <>
-              {user ? (
-                <>
-                  <span className="
+                {user ? (
+                  <>
+                    <span
+                      className="
                     hidden sm:block
                     text-sm
                     text-primary
-                  ">
-                    Hi, {user.name.split(" ")[0]}
-                  </span>
+                  "
+                    >
+                      Hi, {user.name.split(" ")[0]}
+                    </span>
 
-                  <button
-                    onClick={handleLogout}
-                    className="
+                    <button
+                      onClick={handleLogout}
+                      className="
                       rounded-full
                       bg-primary
                       text-white
@@ -159,15 +164,14 @@ export default function Navbar() {
                       hover:bg-primary-light
                       transition
                     "
-                  >
-                    Logout
-                  </button>
-                </>
-              ) : (
-
-                <Link
-                  href="/login"
-                  className="
+                    >
+                      Logout
+                    </button>
+                  </>
+                ) : (
+                  <Link
+                    href="/login"
+                    className="
                     rounded-full
                     bg-primary
                     text-white
@@ -179,18 +183,14 @@ export default function Navbar() {
                     hover:-translate-y-0.5
                     transition
                   "
-                >
-                  Get Started
-                </Link>
-
-              )}
+                  >
+                    Get Started
+                  </Link>
+                )}
               </>
             )}
-
           </div>
-
         </div>
-
       </div>
     </nav>
   );

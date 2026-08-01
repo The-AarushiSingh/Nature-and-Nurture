@@ -58,7 +58,7 @@ export default function DiagnosisPage() {
             plantName,
             symptoms,
           }),
-        }
+        },
       );
 
       const data = await res.json();
@@ -85,13 +85,49 @@ export default function DiagnosisPage() {
   };
 
   const severityColor = {
-    Low: "text-green-700 bg-green-50",
-    Moderate: "text-amber-700 bg-amber-50",
-    High: "text-red-700 bg-red-50",
+    Low: "text-primary bg-sage/20",
+    Moderate: "text-gold bg-gold/10",
+    High: "text-clay bg-clay/10",
   };
 
   return (
-    <main className="max-w-4xl mx-auto px-6 py-10">
+    <main
+      className="
+min-h-screen
+bg-cream
+relative
+overflow-hidden
+px-5
+py-8
+lg:px-10
+"
+    >
+      <div
+        className="
+absolute
+-top-40
+-right-40
+w-[420px]
+h-[420px]
+rounded-full
+bg-sage/20
+blur-3xl
+"
+      />
+
+      <div
+        className="
+          absolute
+          bottom-0
+          left-0
+          w-[300px]
+          h-[300px]
+          rounded-full
+          bg-gold/10
+          blur-3xl
+          "
+      />
+
       <h1 className="text-2xl font-bold text-gray-900 mb-1">
         Plant Disease Diagnosis
       </h1>
@@ -101,7 +137,15 @@ export default function DiagnosisPage() {
         suggest treatment.
       </p>
 
-      <div className="bg-white border border-gray-200 rounded-2xl p-6 mb-6">
+      <div
+        className="bg-white bg-white/80
+backdrop-blur-xl
+border border-primary/10
+rounded-3xl
+p-6
+shadow-[0_25px_70px_-30px_rgba(31,61,43,0.35)]
+ mb-6"
+      >
         <label className="block text-sm font-medium text-gray-700 mb-2">
           Upload affected plant photo
         </label>
@@ -113,7 +157,14 @@ export default function DiagnosisPage() {
             className="w-full max-h-80 object-cover rounded-xl mb-4"
           />
         ) : (
-          <div className="border-2 border-dashed border-gray-300 rounded-xl p-10 text-center text-muted mb-4">
+          <div
+            className="border-2
+border-dashed
+border-primary/20
+bg-sage/10
+rounded-3xl
+ rounded-xl p-10 text-center text-muted mb-4"
+          >
             No photo uploaded yet
           </div>
         )}
@@ -161,7 +212,15 @@ export default function DiagnosisPage() {
       </div>
 
       {result && (
-        <div className="bg-white border border-gray-200 rounded-2xl p-6 space-y-6">
+        <div
+          className="bg-white/80
+backdrop-blur-xl
+border border-primary/10
+rounded-3xl
+p-6
+shadow-[0_25px_70px_-30px_rgba(31,61,43,0.35)]
+ space-y-6"
+        >
           <div className="flex justify-between items-start">
             <div>
               <h2 className="text-xl font-bold text-gray-900">
@@ -199,16 +258,12 @@ export default function DiagnosisPage() {
 
             <div className="rounded-xl p-3 text-center bg-gray-50">
               <p className="text-xs text-muted mb-1">Spread Risk</p>
-              <p className="font-semibold text-sm">
-                {result.spreadRisk}
-              </p>
+              <p className="font-semibold text-sm">{result.spreadRisk}</p>
             </div>
 
             <div className="rounded-xl p-3 text-center bg-gray-50">
               <p className="text-xs text-muted mb-1">Action Urgency</p>
-              <p className="font-semibold text-sm">
-                {result.actionUrgency}
-              </p>
+              <p className="font-semibold text-sm">{result.actionUrgency}</p>
             </div>
           </div>
 
@@ -228,9 +283,7 @@ export default function DiagnosisPage() {
                       <p className="font-medium text-sm text-gray-900">
                         {c.cause}
                       </p>
-                      <p className="text-xs text-muted">
-                        {c.explanation}
-                      </p>
+                      <p className="text-xs text-muted">{c.explanation}</p>
                     </div>
 
                     <span className="text-xs bg-white border border-gray-200 rounded-full px-2.5 py-1 whitespace-nowrap ml-2">
@@ -276,10 +329,7 @@ export default function DiagnosisPage() {
 
               <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {result.preventiveCare.map((tip, i) => (
-                  <li
-                    key={i}
-                    className="text-sm text-gray-700 flex gap-2"
-                  >
+                  <li key={i} className="text-sm text-gray-700 flex gap-2">
                     <span className="text-primary">✓</span>
                     {tip}
                   </li>
@@ -301,9 +351,7 @@ export default function DiagnosisPage() {
                     className="flex justify-between text-sm text-gray-700"
                   >
                     <span>{o.name}</span>
-                    <span className="text-muted">
-                      {o.percentage}%
-                    </span>
+                    <span className="text-muted">{o.percentage}%</span>
                   </div>
                 ))}
               </div>

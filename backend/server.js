@@ -17,7 +17,6 @@ app.use("/api/diagnosis", require("./routes/diagnosis"));
 app.use("/api/plant-id", require("./routes/plantId"));
 app.use("/api/recommendations", require("./routes/recommendations"));
 app.use("/api/activity", require("./routes/activity"));
-app.use("/api/nursery", require("./routes/nursery"));
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI)

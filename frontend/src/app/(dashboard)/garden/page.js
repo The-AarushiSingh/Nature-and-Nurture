@@ -45,64 +45,420 @@ export default function GardenPage() {
   if (loading || !user) return <p className="p-10 text-muted">Loading...</p>;
 
   return (
-    <main className="max-w-6xl mx-auto px-8 py-10">
-      <span className="inline-block bg-primary/10 text-primary text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-3">
-        Your Collection
-      </span>
-      <h1 className="text-3xl font-bold text-primary mb-1" style={{ fontFamily: "var(--font-display)" }}>
-        My Garden
-      </h1>
-      <p className="text-muted mb-8">
-        {plants.length} plant{plants.length !== 1 ? "s" : ""} saved for future reference and care tracking.
-      </p>
+  <main className="
+    min-h-screen
+    bg-cream
+    relative
+    overflow-hidden
+    px-5
+    py-8
+    lg:px-10
+  ">
+
+
+    {/* botanical atmosphere */}
+
+    <div className="
+      absolute
+      -top-40
+      -right-40
+      w-[420px]
+      h-[420px]
+      rounded-full
+      bg-sage/20
+      blur-3xl
+    "/>
+
+
+    <div className="
+      absolute
+      bottom-0
+      left-0
+      w-[300px]
+      h-[300px]
+      rounded-full
+      bg-gold/10
+      blur-3xl
+    "/>
+
+
+
+    <div className="
+      relative
+      max-w-6xl
+      mx-auto
+    ">
+
+
+
+      {/* HEADER */}
+
+      <div className="mb-8">
+
+
+        <span className="
+          inline-flex
+          items-center
+          gap-2
+          bg-primary/10
+          text-primary
+          text-xs
+          font-bold
+          uppercase
+          tracking-widest
+          px-4
+          py-1.5
+          rounded-full
+          mb-4
+        ">
+          🌿 Your Collection
+        </span>
+
+
+
+        <h1
+          className="
+            text-4xl
+            font-bold
+            text-primary
+            mb-2
+          "
+          style={{
+            fontFamily:"var(--font-display)"
+          }}
+        >
+          My Garden
+        </h1>
+
+
+        <p className="
+          text-muted
+          max-w-xl
+        ">
+          Your saved medicinal and culinary plants. Build your personal
+          botanical reference library.
+        </p>
+
+
+      </div>
+
+
+
+
+
+
 
       {fetching ? (
-        <p className="text-muted">Loading your garden...</p>
+
+        <div className="
+          bg-white
+          rounded-3xl
+          border border-primary/10
+          p-8
+          text-muted
+        ">
+          Loading your garden...
+        </div>
+
+
       ) : plants.length === 0 ? (
-        <div className="bg-white border-2 border-dashed border-primary/20 rounded-2xl p-16 text-center">
-          <p className="text-4xl mb-3">🌱</p>
-          <p className="text-muted mb-4">You haven't saved any plants yet.</p>
-          <Link href="/explore" className="inline-block bg-primary text-white rounded-full px-6 py-2.5 font-bold hover:bg-primary-light transition-colors">
+
+
+        <div className="
+          bg-white/80
+          backdrop-blur-xl
+          border-2
+          border-dashed
+          border-primary/20
+          rounded-3xl
+          p-16
+          text-center
+          shadow-[0_20px_60px_-30px_rgba(31,61,43,0.3)]
+        ">
+
+
+          <div className="
+            w-20
+            h-20
+            rounded-3xl
+            bg-sage/20
+            flex
+            items-center
+            justify-center
+            text-4xl
+            mx-auto
+            mb-5
+          ">
+            🌱
+          </div>
+
+
+          <h2
+            className="
+              text-xl
+              font-bold
+              text-primary
+              mb-2
+            "
+            style={{
+              fontFamily:"var(--font-display)"
+            }}
+          >
+            Your garden is empty
+          </h2>
+
+
+          <p className="
+            text-muted
+            mb-6
+          ">
+            Save plants while exploring to build your personal collection.
+          </p>
+
+
+
+          <Link
+            href="/explore"
+            className="
+              inline-flex
+              bg-primary
+              text-white
+              rounded-full
+              px-7
+              py-3
+              font-semibold
+              hover:bg-primary-light
+              transition
+            "
+          >
             Explore Plants →
           </Link>
+
+
         </div>
+
+
+
       ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-5">
-          {plants.map((plant) => {
-            const imagePath = `/images/plants/${slugify(plant.commonName)}.jpg`;
-            return (
-              <Link
-                key={plant._id}
-                href={`/plants/${plant._id}`}
-                className="bg-white border border-gray-200 rounded-2xl overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all duration-200 relative group"
+
+
+        <>
+
+
+          {/* garden stats */}
+
+          <div className="
+            mb-6
+            bg-white/70
+            backdrop-blur-xl
+            border border-primary/10
+            rounded-3xl
+            p-5
+            flex
+            items-center
+            gap-4
+            w-fit
+          ">
+
+            <div className="
+              w-12
+              h-12
+              rounded-2xl
+              bg-sage/25
+              flex
+              items-center
+              justify-center
+              text-xl
+            ">
+              🌿
+            </div>
+
+
+            <div>
+
+              <p
+                className="
+                  text-2xl
+                  font-bold
+                  text-primary
+                "
+                style={{
+                  fontFamily:"var(--font-display)"
+                }}
               >
-                <div className="h-28 bg-sage/20 relative overflow-hidden">
-                  <img
-                    src={imagePath}
-                    alt={plant.commonName}
-                    className="absolute inset-0 w-full h-full object-cover"
-                    onError={(e) => { e.currentTarget.style.display = "none"; }}
-                  />
-                  <button
-                    onClick={(e) => handleRemove(e, plant._id)}
-                    className="absolute top-2 right-2 w-7 h-7 rounded-full bg-white/90 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity"
-                    title="Remove from garden"
-                  >
-                    ✕
-                  </button>
-                </div>
-                <div className="p-3.5">
-                  <p className="font-bold text-gray-900 text-sm leading-tight" style={{ fontFamily: "var(--font-display)" }}>
-                    {plant.commonName}
-                  </p>
-                  {plant.hindiName && <p className="text-primary text-xs font-medium mt-0.5">{plant.hindiName}</p>}
-                  <p className="italic text-muted text-xs mt-0.5">{plant.botanicalName}</p>
-                </div>
-              </Link>
-            );
-          })}
-        </div>
+                {plants.length}
+              </p>
+
+
+              <p className="
+                text-xs
+                text-muted
+              ">
+                Saved plants
+              </p>
+
+            </div>
+
+          </div>
+
+
+
+
+
+
+          <div className="
+            grid
+            grid-cols-2
+            sm:grid-cols-3
+            md:grid-cols-4
+            gap-5
+          ">
+
+
+            {plants.map((plant)=>{
+
+
+              const imagePath =
+                `/images/plants/${slugify(plant.commonName)}.jpg`;
+
+
+              return (
+
+                <Link
+                  key={plant._id}
+                  href={`/plants/${plant._id}`}
+                  className="
+                    group
+                    bg-white
+                    border border-primary/10
+                    rounded-3xl
+                    overflow-hidden
+                    hover:shadow-lg
+                    hover:-translate-y-1
+                    transition-all
+                  "
+                >
+
+
+
+                  <div className="
+                    h-36
+                    bg-sage/20
+                    relative
+                    overflow-hidden
+                  ">
+
+
+                    <img
+                      src={imagePath}
+                      alt={plant.commonName}
+                      className="
+                        w-full
+                        h-full
+                        object-cover
+                        group-hover:scale-105
+                        transition
+                      "
+                      onError={(e)=>{
+                        e.currentTarget.style.display="none";
+                      }}
+                    />
+
+
+
+                    <button
+                      onClick={(e)=>handleRemove(e,plant._id)}
+                      className="
+                        absolute
+                        top-3
+                        right-3
+                        w-8
+                        h-8
+                        rounded-full
+                        bg-white/90
+                        text-primary
+                        shadow-sm
+                        hover:bg-clay/10
+                        transition
+                      "
+                      title="Remove from garden"
+                    >
+                      ×
+                    </button>
+
+
+                  </div>
+
+
+
+
+
+                  <div className="p-4">
+
+
+                    <p
+                      className="
+                        font-bold
+                        text-primary
+                        text-sm
+                      "
+                      style={{
+                        fontFamily:"var(--font-display)"
+                      }}
+                    >
+                      {plant.commonName}
+                    </p>
+
+
+
+                    {plant.hindiName && (
+
+                      <p className="
+                        text-xs
+                        text-primary-light
+                        font-medium
+                        mt-1
+                      ">
+                        {plant.hindiName}
+                      </p>
+
+                    )}
+
+
+
+                    <p className="
+                      italic
+                      text-muted
+                      text-xs
+                      mt-2
+                    ">
+                      {plant.botanicalName}
+                    </p>
+
+
+                  </div>
+
+
+
+                </Link>
+
+              );
+
+            })}
+
+
+          </div>
+
+
+        </>
+
       )}
-    </main>
-  );
+
+
+    </div>
+
+
+  </main>
+);
+
 }

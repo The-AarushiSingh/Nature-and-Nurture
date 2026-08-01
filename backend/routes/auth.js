@@ -24,9 +24,15 @@ router.post("/register", async (req, res) => {
     });
 
     res.status(201).json({
-      token,
-      user: { id: newUser._id, name: newUser.name, email: newUser.email },
-    });
+  token,
+  user: {
+    id: newUser._id,
+    name: newUser.name,
+    email: newUser.email,
+    createdAt: newUser.createdAt,
+  },
+});
+
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -52,9 +58,15 @@ router.post("/login", async (req, res) => {
     });
 
     res.json({
-      token,
-      user: { id: user._id, name: user.name, email: user.email },
-    });
+  token,
+  user: {
+    id: user._id,
+    name: user.name,
+    email: user.email,
+    createdAt: user.createdAt,
+  },
+});
+
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

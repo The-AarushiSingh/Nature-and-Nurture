@@ -54,7 +54,37 @@ export default function ComparePage() {
   ];
 
   return (
-    <main className="max-w-6xl mx-auto px-8 py-10">
+    <main className="
+min-h-screen
+bg-cream
+relative
+overflow-hidden
+px-5
+py-8
+lg:px-10
+">
+<div className="
+absolute
+-top-40
+-right-40
+w-[400px]
+h-[400px]
+rounded-full
+bg-sage/20
+blur-3xl
+"/>
+
+<div className="
+absolute
+bottom-0
+left-0
+w-[300px]
+h-[300px]
+rounded-full
+bg-gold/10
+blur-3xl
+"/>
+
       <span className="inline-block bg-primary/10 text-primary text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-3">
         Side-by-Side
       </span>

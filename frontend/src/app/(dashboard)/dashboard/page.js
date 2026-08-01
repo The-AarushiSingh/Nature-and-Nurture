@@ -187,9 +187,9 @@ export default function Dashboard() {
             Your garden is waiting for today's discovery.
           </p>
         </div>
-        <div className="w-10 h-10 rounded-full bg-gold flex items-center justify-center text-white font-bold rotate-3">
+        {/* <div className="w-10 h-10 rounded-full bg-gold flex items-center justify-center text-white font-bold rotate-3">
           {user.name[0]}
-        </div>
+        </div> */}
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">

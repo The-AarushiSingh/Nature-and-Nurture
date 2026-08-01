@@ -20,15 +20,18 @@ export default function Sidebar() {
   const router = useRouter();
   const { user, logout } = useAuth();
 
-  const handleLogout = () => {
-    logout();
-    router.push("/login");
-  };
+   console.log(user); 
+
+  const handleLogout = async () => {
+  await logout();
+  router.replace("/login");
+};
+
 
   return (
     <aside className="w-64 bg-white border-r border-gray-200 h-screen sticky top-0 flex flex-col">
       {/* Logo */}
-      <div className="p-5 border-b border-gray-100">
+      {/* <div className="p-5 border-b border-gray-100">
         <Link href="/dashboard" className="flex items-center gap-2">
           <img
             src="/images/logo.png"
@@ -41,25 +44,86 @@ export default function Sidebar() {
           >
             Nature <span className="font-normal text-muted">&</span> Nurture
           </span>
-        </Link>
-      </div>
+        </Link> */}
+      {/* </div> */}
 
       {/* User */}
-      <div className="p-5 border-b border-gray-100 flex items-center gap-3">
-        <div className="w-9 h-9 rounded-full bg-gold flex items-center justify-center text-white font-bold text-sm">
-          {user?.name?.[0] || "U"}
-        </div>
+      <div className="
+  p-5
+  border-b
+  border-primary/10
+  flex
+  items-center
+  gap-3
+">
 
-        <div>
-          <p className="font-semibold text-gray-900 text-sm">
-            {user?.name}
-          </p>
-          <p className="text-xs text-muted">Member</p>
-        </div>
-      </div>
+  <div className="
+    w-11
+    h-11
+    rounded-2xl
+    bg-gold/90
+    flex
+    items-center
+    justify-center
+    text-white
+    font-bold
+    text-sm
+    shadow-[0_8px_20px_-10px_rgba(193,122,31,0.6)]
+  ">
+    {user?.name?.[0]?.toUpperCase() || "U"}
+  </div>
+
+
+  <div className="min-w-0">
+
+    <p
+      className="
+        font-semibold
+        text-primary
+        text-sm
+        truncate
+      "
+      style={{ fontFamily: "var(--font-display)" }}
+    >
+      {user?.name || "User"}
+    </p>
+
+    <p className="
+  text-[11px]
+  text-muted
+  mt-1
+  flex
+  items-center
+  gap-1
+">
+  <span className="w-1.5 h-1.5 rounded-full bg-sage" />
+  Member since{" "}
+  {user?.createdAt
+    ? new Date(user.createdAt).toLocaleDateString("en-IN", {
+        month: "short",
+        year: "numeric",
+      })
+    : "N/A"}
+</p>
+
+
+
+  </div>
+
+</div>
+
 
       {/* Navigation */}
-      <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
+      <nav className="
+  flex-1
+  p-3
+  space-y-1
+  overflow-y-auto
+  sidebar-scroll
+">
+
+
+
         {navItems.map((item) => {
           const active = pathname === item.href;
 
@@ -83,12 +147,40 @@ export default function Sidebar() {
       {/* Logout */}
       <div className="p-3 border-t border-gray-100">
         <button
-          onClick={handleLogout}
-          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-        >
-          <span className="text-lg">🚪</span>
-          <span>Sign Out</span>
-        </button>
+  onClick={handleLogout}
+  className="
+    w-full
+    flex
+    items-center
+    gap-3
+    px-4
+    py-3
+    rounded-2xl
+    text-sm
+    font-medium
+    text-muted
+    transition-all
+    duration-200
+    hover:bg-clay/10
+    hover:text-clay
+    hover:translate-x-1
+  "
+>
+  <span className="
+    w-8
+    h-8
+    rounded-xl
+    bg-clay/10
+    flex
+    items-center
+    justify-center
+  ">
+    🚪
+  </span>
+
+  <span>Sign Out</span>
+</button>
+
       </div>
     </aside>
   );
