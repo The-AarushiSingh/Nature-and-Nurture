@@ -1,8 +1,13 @@
 "use client";
+
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
+import { useAuth } from "@/context/AuthContext";
+import { logActivity } from "@/utils/logActivity";
 
 export default function AssistantPage() {
+  const { token } = useAuth();
+
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -26,27 +31,51 @@ export default function AssistantPage() {
         `${process.env.NEXT_PUBLIC_API_URL}/api/assistant/chat`,
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+          },
           body: JSON.stringify({ message: userMessage.text }),
         }
       );
+
       const data = await res.json();
 
       if (!res.ok) {
         setMessages((prev) => [
           ...prev,
-          { role: "assistant", text: "Sorry, something went wrong.", sources: [] },
+          {
+            role: "assistant",
+            text: "Sorry, something went wrong.",
+            sources: [],
+          },
         ]);
       } else {
+        // Log AI question
+        if (token) {
+          logActivity(token, {
+            type: "asked_ai",
+            title: userMessage.text,
+            subtitle: data.answer?.slice(0, 80),
+          });
+        }
+
         setMessages((prev) => [
           ...prev,
-          { role: "assistant", text: data.answer, sources: data.sources },
+          {
+            role: "assistant",
+            text: data.answer,
+            sources: data.sources,
+          },
         ]);
       }
     } catch (err) {
       setMessages((prev) => [
         ...prev,
-        { role: "assistant", text: "Could not connect to server.", sources: [] },
+        {
+          role: "assistant",
+          text: "Could not connect to server.",
+          sources: [],
+        },
       ]);
     } finally {
       setLoading(false);
@@ -65,7 +94,8 @@ export default function AssistantPage() {
       <div>
         <h1 className="text-2xl font-bold text-gray-900">Nature AI</h1>
         <p className="text-muted text-sm mb-6">
-          Ask me anything about medicinal plants — grounded in our database, not guesses.
+          Ask me anything about medicinal plants — grounded in our database,
+          not guesses.
         </p>
       </div>
 
@@ -87,7 +117,9 @@ export default function AssistantPage() {
         {messages.map((msg, i) => (
           <div
             key={i}
-            className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
+            className={`flex ${
+              msg.role === "user" ? "justify-end" : "justify-start"
+            }`}
           >
             <div
               className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm whitespace-pre-line ${
@@ -97,6 +129,7 @@ export default function AssistantPage() {
               }`}
             >
               {msg.text}
+
               {msg.sources && msg.sources.length > 0 && (
                 <div className="mt-3 pt-3 border-t border-gray-100 flex flex-wrap gap-1.5">
                   {msg.sources.map((s) => (
@@ -133,6 +166,7 @@ export default function AssistantPage() {
           placeholder="Ask about any medicinal plant, cultivation advice, health benefits..."
           className="flex-1 border border-gray-300 rounded-full px-5 py-2.5 focus:outline-none focus:ring-2 focus:ring-primary/40"
         />
+
         <button
           type="submit"
           disabled={loading}

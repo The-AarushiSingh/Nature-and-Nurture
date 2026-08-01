@@ -1,6 +1,9 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useAuth } from "@/context/AuthContext";
+import { logActivity } from "@/utils/logActivity";
+
 
 const steps = [
   {
@@ -60,6 +63,8 @@ const steps = [
 ];
 
 export default function RecommendationsPage() {
+  const { token } = useAuth();
+
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState({ goals: [] });
   const [results, setResults] = useState(null);
@@ -86,7 +91,10 @@ export default function RecommendationsPage() {
         };
       });
     } else {
-      setAnswers((prev) => ({ ...prev, [current.key]: value }));
+      setAnswers((prev) => ({
+        ...prev,
+        [current.key]: value,
+      }));
     }
   };
 
@@ -95,18 +103,35 @@ export default function RecommendationsPage() {
       setStep(step + 1);
     } else {
       setLoading(true);
+
       try {
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/api/recommendations`,
           {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: {
+              "Content-Type": "application/json",
+            },
             body: JSON.stringify(answers),
-          },
+          }
         );
+
         const data = await res.json();
+
         setResults(data);
-        sessionStorage.setItem("recommendationResults", JSON.stringify(data));
+
+        if (token) {
+          logActivity(token, {
+            type: "recommendation_quiz",
+            title: "Completed recommendation quiz",
+            subtitle: `${data.length} matches found`,
+          });
+        }
+
+        sessionStorage.setItem(
+          "recommendationResults",
+          JSON.stringify(data)
+        );
       } catch (err) {
         console.error(err);
       } finally {
@@ -136,6 +161,7 @@ export default function RecommendationsPage() {
               Based on your answers, here's what should thrive for you.
             </p>
           </div>
+
           <button
             onClick={handleRestart}
             className="text-sm text-primary underline"
@@ -166,10 +192,12 @@ export default function RecommendationsPage() {
                       {r.botanicalName}
                     </p>
                   </div>
+
                   <span className="text-sm font-bold text-primary">
                     {r.matchScore}%
                   </span>
                 </div>
+
                 <div className="space-y-1">
                   {r.reasons.map((reason, i) => (
                     <p key={i} className="text-xs text-gray-600">
@@ -194,15 +222,21 @@ export default function RecommendationsPage() {
           </span>
           <span>{Math.round(((step + 1) / steps.length) * 100)}%</span>
         </div>
+
         <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
           <div
             className="h-full bg-primary transition-all duration-300"
-            style={{ width: `${((step + 1) / steps.length) * 100}%` }}
+            style={{
+              width: `${((step + 1) / steps.length) * 100}%`,
+            }}
           />
         </div>
       </div>
 
-      <h1 className="text-2xl font-bold text-gray-900 mb-1">{current.title}</h1>
+      <h1 className="text-2xl font-bold text-gray-900 mb-1">
+        {current.title}
+      </h1>
+
       <p className="text-muted text-sm mb-6">{current.subtitle}</p>
 
       <div className="space-y-3 mb-8">
@@ -238,6 +272,7 @@ export default function RecommendationsPage() {
         ) : (
           <div />
         )}
+
         <button
           onClick={handleNext}
           disabled={!canProceed || loading}
@@ -246,10 +281,11 @@ export default function RecommendationsPage() {
           {loading
             ? "Finding matches..."
             : step === steps.length - 1
-              ? "Get My Recommendations"
-              : "Continue →"}
+            ? "Get My Recommendations"
+            : "Continue →"}
         </button>
       </div>
     </main>
   );
 }
+

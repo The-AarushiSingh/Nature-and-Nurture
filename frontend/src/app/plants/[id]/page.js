@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
+import { logActivity } from "@/utils/logActivity";
 
 export default function PlantProfile() {
   const { id } = useParams();
@@ -13,46 +14,68 @@ export default function PlantProfile() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/plants/${id}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setPlant(data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error(err);
-        setLoading(false);
-      });
-  }, [id]);
+  fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/plants/${id}`)
+    .then((res) => res.json())
+    .then((data) => {
+      setPlant(data);
+
+      if (token) {
+        logActivity(token, {
+          type: "viewed_plant",
+          title: `Viewed ${data.commonName}`,
+          relatedPlantId: data._id,
+        });
+      }
+
+      setLoading(false);
+    })
+    .catch((err) => {
+      console.error(err);
+      setLoading(false);
+    });
+}, [id, token]);
+
 
   const handleSaveToGarden = async () => {
-    if (!user) {
-      alert("Please log in to save plants to your garden.");
-      return;
-    }
+  if (!user) {
+    alert("Please log in to save plants to your garden.");
+    return;
+  }
 
-    setSaving(true);
-    try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/garden/${id}`,
-        {
-          method: "POST",
-          headers: { Authorization: `Bearer ${token}` },
+  setSaving(true);
+
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/garden/${id}`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
-      );
-      const data = await res.json();
-
-      if (res.ok) {
-        setSaved(true);
-      } else {
-        alert(data.error || "Something went wrong");
       }
-    } catch (err) {
-      alert("Could not connect to server");
-    } finally {
-      setSaving(false);
+    );
+
+    const data = await res.json();
+
+    if (res.ok) {
+      setSaved(true);
+
+      if (token) {
+        logActivity(token, {
+          type: "saved_garden",
+          title: `Saved ${plant.commonName} to garden`,
+        });
+      }
+    } else {
+      alert(data.error || "Something went wrong");
     }
-  };
+  } catch (err) {
+    alert("Could not connect to server");
+  } finally {
+    setSaving(false);
+  }
+};
+
 
   if (loading) return <p className="p-10 text-muted">Loading plant...</p>;
   if (!plant) return <p className="p-10 text-muted">Plant not found.</p>;

@@ -1,8 +1,13 @@
 "use client";
+
 import { useState } from "react";
 import Link from "next/link";
+import { useAuth } from "@/context/AuthContext";
+import { logActivity } from "@/utils/logActivity";
 
 export default function PlantIdPage() {
+  const { token } = useAuth();
+
   const [imagePreview, setImagePreview] = useState(null);
   const [imageBase64, setImageBase64] = useState(null);
   const [mimeType, setMimeType] = useState(null);
@@ -16,12 +21,14 @@ export default function PlantIdPage() {
 
     setMimeType(file.type);
     const reader = new FileReader();
+
     reader.onloadend = () => {
       const fullResult = reader.result;
       setImageBase64(fullResult.split(",")[1]);
       setImagePreview(fullResult);
       setResult(null);
     };
+
     reader.readAsDataURL(file);
   };
 
@@ -30,6 +37,7 @@ export default function PlantIdPage() {
       setError("Please upload a photo first.");
       return;
     }
+
     setError("");
     setLoading(true);
     setResult(null);
@@ -39,15 +47,30 @@ export default function PlantIdPage() {
         `${process.env.NEXT_PUBLIC_API_URL}/api/plant-id`,
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ image: imageBase64, mimeType }),
-        },
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            image: imageBase64,
+            mimeType,
+          }),
+        }
       );
+
       const data = await res.json();
 
       if (!res.ok) {
         setError(data.error || "Something went wrong.");
       } else {
+        // Log successful plant identification
+        if (token) {
+          logActivity(token, {
+            type: "identified_plant",
+            title: `Identified ${data.commonName}`,
+            subtitle: `${data.confidence}% confidence`,
+          });
+        }
+
         setResult(data);
       }
     } catch (err) {
@@ -62,6 +85,7 @@ export default function PlantIdPage() {
       <h1 className="text-2xl font-bold text-gray-900 mb-1">
         Plant Identification
       </h1>
+
       <p className="text-muted mb-8">
         Upload a clear photo of any plant — our AI will identify it and show
         what it knows.
@@ -111,13 +135,16 @@ export default function PlantIdPage() {
                   </span>
                 )}
               </h2>
+
               {result.botanicalName && (
                 <p className="italic text-sm text-muted">
                   {result.botanicalName}
                 </p>
               )}
+
               <p className="text-xs text-muted mt-1">{result.family}</p>
             </div>
+
             <div className="text-right">
               <p className="text-2xl font-bold text-primary">
                 {result.confidence}%
@@ -138,12 +165,14 @@ export default function PlantIdPage() {
                   {result.generalCare.sunlight}
                 </p>
               </div>
+
               <div className="bg-gray-50 rounded-lg p-3 text-center">
                 <p className="text-xs text-muted">Water</p>
                 <p className="text-sm font-medium">
                   {result.generalCare.water}
                 </p>
               </div>
+
               <div className="bg-gray-50 rounded-lg p-3 text-center">
                 <p className="text-xs text-muted">Difficulty</p>
                 <p className="text-sm font-medium">
@@ -154,7 +183,8 @@ export default function PlantIdPage() {
           )}
 
           <p className="text-sm text-gray-700 mb-5">
-            <span className="font-medium">Known uses:</span> {result.knownUses}
+            <span className="font-medium">Known uses:</span>{" "}
+            {result.knownUses}
           </p>
 
           {result.inDatabase ? (
