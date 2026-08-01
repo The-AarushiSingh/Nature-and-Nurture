@@ -111,7 +111,7 @@ export default function GardenPage() {
           rounded-full
           mb-4
         ">
-          🌿 Your Collection
+          Your Collection
         </span>
 
 

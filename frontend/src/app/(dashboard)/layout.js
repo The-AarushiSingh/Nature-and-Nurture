@@ -7,4 +7,4 @@ export default function DashboardLayout({ children }) {
       <div className="flex-1 bg-cream min-h-screen">{children}</div>
     </div>
   );
-}
+} 

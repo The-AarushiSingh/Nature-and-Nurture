@@ -38,7 +38,7 @@ export default function Footer() {
           <div>
             <p className="text-white font-bold text-sm mb-3">About</p>
             <ul className="space-y-2 text-xs">
-              <li><a href="https://github.com" target="_blank" rel="noopener noreferrer" className="hover:text-white">GitHub Repo</a></li>
+              <li><a href="https://github.com/The-AarushiSingh/Nature-and-Nurture" target="_blank" rel="noopener noreferrer" className="hover:text-white">GitHub Repo</a></li>
               <li><span>Built by Aarushi Singh</span></li>
             </ul>
           </div>
@@ -46,7 +46,7 @@ export default function Footer() {
 
         <div className="border-t border-white/10 pt-6 flex flex-col sm:flex-row justify-between items-center gap-3 text-xs">
           <p>© 2026 Nature & Nurture. A student project, not a commercial product.</p>
-          <p>Made with 🌿 and a 15-day deadline.</p>
+          <p>Made with &hearts;</p>
         </div>
       </div>
     </footer>

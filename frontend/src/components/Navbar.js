@@ -17,6 +17,10 @@ export default function Navbar() {
     router.push("/");
   };
 
+  const navLink =
+  "relative text-gray-600 hover:text-primary transition after:absolute after:left-0 after:-bottom-2 after:h-[2px] after:w-0 after:bg-gold after:transition-all hover:after:w-full";
+
+
   return (
     <nav className="sticky top-0 z-50 bg-cream/80 backdrop-blur-xl">
       <div className="max-w-7xl mx-auto px-8 py-5">
@@ -93,47 +97,18 @@ export default function Navbar() {
             font-medium
           "
           >
-            <Link
-              href="/explore"
-              className="
-                text-gray-600
-                hover:text-primary
-                transition
-                relative
-                after:absolute
-                after:left-0
-                after:-bottom-2
-                after:h-[2px]
-                after:w-0
-                after:bg-gold
-                hover:after:w-full
-                after:transition-all
-              "
-            >
-              Explore Plants
-            </Link>
+            <Link href="/explore" className={navLink}>
+  Explore Plants
+</Link>
 
-            <Link
-              href="/dashboard"
-              className="
-                text-gray-600
-                hover:text-primary
-                transition
-              "
-            >
-              Dashboard
-            </Link>
+<Link href="/dashboard" className={navLink}>
+  Dashboard
+</Link>
 
-            <Link
-              href="/garden"
-              className="
-                text-gray-600
-                hover:text-primary
-                transition
-              "
-            >
-              My Garden
-            </Link>
+<Link href="/garden" className={navLink}>
+  My Garden
+</Link>
+
           </div>
 
           {/* Right */}

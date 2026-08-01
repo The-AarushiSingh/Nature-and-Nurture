@@ -97,13 +97,7 @@ export default function Sidebar() {
   gap-1
 ">
   <span className="w-1.5 h-1.5 rounded-full bg-sage" />
-  Member since{" "}
-  {user?.createdAt
-    ? new Date(user.createdAt).toLocaleDateString("en-IN", {
-        month: "short",
-        year: "numeric",
-      })
-    : "N/A"}
+  Member
 </p>
 
 

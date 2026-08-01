@@ -177,7 +177,7 @@ export default function AssistantPage() {
 
           <div className="flex items-center gap-3">
 
-            <div className="
+            {/* <div className="
               w-12 h-12
               rounded-2xl
               bg-sage/25
@@ -188,7 +188,7 @@ export default function AssistantPage() {
               shadow-inner
             ">
               🌿
-            </div>
+            </div> */}
 
 
             <div>
@@ -237,10 +237,6 @@ export default function AssistantPage() {
 
         </div>
 
-
-
-
-
         {/* CHAT SCROLL */}
 
         <div className="
@@ -261,7 +257,7 @@ export default function AssistantPage() {
 
               <div className="text-center mb-8">
 
-                <div className="
+                {/* <div className="
                   mx-auto
                   w-20 h-20
                   rounded-3xl
@@ -273,7 +269,7 @@ export default function AssistantPage() {
                   mb-4
                 ">
                   🌱
-                </div>
+                </div> */}
 
 
                 <h2
@@ -593,12 +589,6 @@ export default function AssistantPage() {
 
       </main>
 
-
-
-
-
-
-
       {/* RIGHT EVIDENCE PANEL */}
 
 
@@ -615,21 +605,7 @@ nature-scroll
 
 
 
-        <div className="mb-6">
-
-          <div className="
-            w-10 h-10
-            rounded-2xl
-            bg-sage/25
-            flex
-            items-center
-            justify-center
-            mb-3
-          ">
-            🌿
-          </div>
-
-
+        <div className="mb-6">  
           <h2
             className="
               text-lg
@@ -650,10 +626,6 @@ nature-scroll
 
 
         </div>
-
-
-
-
         {lastSources.length===0 ? (
 
           <div className="
@@ -759,7 +731,7 @@ nature-scroll
       mb-4
     ">
 
-      <div className="
+      {/* <div className="
         w-9
         h-9
         rounded-xl
@@ -769,7 +741,7 @@ nature-scroll
         justify-center
       ">
         🧠
-      </div>
+      </div> */}
 
 
       <div>
@@ -924,7 +896,7 @@ nature-scroll
         text-primary
         font-semibold
       ">
-        🌿 Grounded responses
+        Grounded responses
       </p>
 
       <p className="

@@ -165,7 +165,7 @@ py-12
             <div className="flex justify-between items-start mb-8">
               <div>
                 <div className="inline-flex items-center gap-2 bg-green-100 text-green-700 px-4 py-2 rounded-full text-xs font-bold mb-3">
-                  🌱 Your Plant Match
+                  Your Plant Match
                 </div>
 
                 <h1 className="text-4xl font-bold text-primary">
@@ -206,7 +206,7 @@ py-12
             text-center
           "
               >
-                <div className="text-5xl mb-4">🌿</div>
+                {/* <div className="text-5xl mb-4">🌿</div> */}
                 <p className="text-gray-700">No strong matches yet.</p>
                 <p className="text-sm text-muted mt-2">
                   Try adjusting your preferences.
@@ -280,7 +280,7 @@ py-12
                         px-3 py-2
                       "
                         >
-                          <span>🌱</span>
+                          {/* <span>🌱</span> */}
                           {reason}
                         </div>
                       ))}
