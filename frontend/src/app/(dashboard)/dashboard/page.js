@@ -4,15 +4,22 @@ import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 
+const careTips = [
+  "Ashwagandha prefers dry soil between waterings — overwatering is the most common way people kill it.",
+  "Tulsi grows fastest with at least 6 hours of direct sun a day, even indoors near a bright window.",
+  "Curry leaf plants are slow starters — don't judge growth speed until month 3-4.",
+  "Neem is naturally pest-resistant, making it one of the lowest-maintenance plants to start with.",
+  "Mint spreads aggressively — always grow it in its own container, never mixed with other plants.",
+];
+
 export default function Dashboard() {
   const { user, token, loading } = useAuth();
   const router = useRouter();
-  const [savedCount, setSavedCount] = useState(0);
+  const [savedPlants, setSavedPlants] = useState([]);
+  const [tip] = useState(careTips[Math.floor(Math.random() * careTips.length)]);
 
   useEffect(() => {
-    if (!loading && !user) {
-      router.push("/login");
-    }
+    if (!loading && !user) router.push("/login");
   }, [loading, user]);
 
   useEffect(() => {
@@ -21,19 +28,12 @@ export default function Dashboard() {
         headers: { Authorization: `Bearer ${token}` },
       })
         .then((res) => res.json())
-        .then((data) => setSavedCount(Array.isArray(data) ? data.length : 0))
-        .catch(() => setSavedCount(0));
+        .then((data) => setSavedPlants(Array.isArray(data) ? data : []))
+        .catch(() => setSavedPlants([]));
     }
   }, [token]);
 
   if (loading || !user) return <p className="p-10 text-muted">Loading...</p>;
-
-  const stats = [
-    { label: "Plants Saved", value: savedCount, icon: "🌿" },
-    { label: "AI Queries", value: "—", icon: "🤖", note: "Coming soon" },
-    { label: "Plants ID'd", value: "—", icon: "📷", note: "Coming soon" },
-    { label: "Streak", value: "—", icon: "🔥", note: "Coming soon" },
-  ];
 
   const quickActions = [
     { label: "AI Assistant", sub: "Ask anything", icon: "🤖", href: "/assistant" },
@@ -45,53 +45,65 @@ export default function Dashboard() {
   return (
     <main className="max-w-6xl mx-auto px-8 py-10">
       <p className="text-sm text-muted">
-        {new Date().toLocaleDateString("en-US", {
-          weekday: "long",
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-        })}
+        {new Date().toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
       </p>
       <h1 className="text-2xl font-bold text-gray-900 mb-8">
         Good day, {user.name.split(" ")[0]} 🌿
       </h1>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
-        {stats.map((s) => (
-          <div
-            key={s.label}
-            className="bg-white border border-gray-200 rounded-2xl p-5"
-          >
-            <div className="flex justify-between items-start mb-2">
-              <p className="text-sm text-muted">{s.label}</p>
-              <span>{s.icon}</span>
-            </div>
-            <p className="text-2xl font-bold text-gray-900">{s.value}</p>
-            {s.note && <p className="text-xs text-muted mt-1">{s.note}</p>}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="md:col-span-2 space-y-6">
+          <div className="bg-white border border-gray-200 rounded-2xl p-5">
+            <p className="text-sm text-muted">Plants Saved</p>
+            <p className="text-3xl font-bold text-primary">{savedPlants.length}</p>
           </div>
-        ))}
-      </div>
 
-      <h2 className="text-lg font-semibold text-gray-900 mb-3">Quick Actions</h2>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
-        {quickActions.map((a) => (
-          <Link
-            key={a.label}
-            href={a.href}
-            className="bg-white border border-gray-200 rounded-2xl p-5 text-center hover:shadow-md transition-all"
-          >
-            <div className="text-2xl mb-2">{a.icon}</div>
-            <p className="font-medium text-gray-900 text-sm">{a.label}</p>
-            <p className="text-xs text-muted">{a.sub}</p>
-          </Link>
-        ))}
-      </div>
+          <div>
+            <h2 className="text-lg font-semibold text-gray-900 mb-3">Quick Actions</h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {quickActions.map((a) => (
+                <Link
+                  key={a.label}
+                  href={a.href}
+                  className="bg-white border border-gray-200 rounded-2xl p-5 text-center hover:shadow-md transition-all"
+                >
+                  <div className="text-2xl mb-2">{a.icon}</div>
+                  <p className="font-medium text-gray-900 text-sm">{a.label}</p>
+                  <p className="text-xs text-muted">{a.sub}</p>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
 
-      <div className="bg-white border border-gray-200 rounded-2xl p-6">
-        <p className="text-muted text-sm">
-          More sections (Recently Viewed, Recent Activity, Continue with AI)
-          will appear here as those features get built.
-        </p>
+        <div className="space-y-6">
+          <div className="bg-white border border-gray-200 rounded-2xl p-5">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="font-semibold text-gray-900">My Garden</h3>
+              <Link href="/garden" className="text-xs text-primary font-medium">View all →</Link>
+            </div>
+            {savedPlants.length === 0 ? (
+              <p className="text-sm text-muted">No plants saved yet.</p>
+            ) : (
+              <div className="grid grid-cols-3 gap-2">
+                {savedPlants.slice(0, 6).map((p) => (
+                  <Link
+                    key={p._id}
+                    href={`/plants/${p._id}`}
+                    className="bg-primary/10 rounded-lg p-2 text-center hover:bg-primary/20 transition-colors"
+                  >
+                    <p className="text-[10px] font-semibold text-primary truncate">{p.commonName}</p>
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div className="bg-primary rounded-2xl p-5">
+            <p className="text-sage text-xs font-bold uppercase tracking-wide mb-2">💡 Tip of the Day</p>
+            <p className="text-white text-sm leading-relaxed">{tip}</p>
+          </div>
+        </div>
       </div>
     </main>
   );
