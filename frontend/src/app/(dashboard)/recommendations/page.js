@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import { logActivity } from "@/utils/logActivity";
 
-
 const steps = [
   {
     key: "climate",
@@ -113,7 +112,7 @@ export default function RecommendationsPage() {
               "Content-Type": "application/json",
             },
             body: JSON.stringify(answers),
-          }
+          },
         );
 
         const data = await res.json();
@@ -128,10 +127,7 @@ export default function RecommendationsPage() {
           });
         }
 
-        sessionStorage.setItem(
-          "recommendationResults",
-          JSON.stringify(data)
-        );
+        sessionStorage.setItem("recommendationResults", JSON.stringify(data));
       } catch (err) {
         console.error(err);
       } finally {
@@ -153,62 +149,148 @@ export default function RecommendationsPage() {
 
   if (results) {
     return (
-      <main className="max-w-4xl mx-auto px-6 py-10">
-        <div className="flex justify-between items-center mb-6">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">Your Matches</h1>
-            <p className="text-muted text-sm">
-              Based on your answers, here's what should thrive for you.
-            </p>
-          </div>
+      <main
+        className="
+min-h-screen
+bg-gradient-to-br
+from-[#f2f8e9]
+via-[#fffdf5]
+to-[#e6f3df]
+px-6
+py-12
+"
+      >
+        <div className="max-w-2xl mx-auto">
+          <div className="max-w-5xl mx-auto">
+            <div className="flex justify-between items-start mb-8">
+              <div>
+                <div className="inline-flex items-center gap-2 bg-green-100 text-green-700 px-4 py-2 rounded-full text-xs font-bold mb-3">
+                  🌱 Your Plant Match
+                </div>
 
-          <button
-            onClick={handleRestart}
-            className="text-sm text-primary underline"
-          >
-            Start over
-          </button>
-        </div>
+                <h1 className="text-4xl font-bold text-primary">
+                  Plants picked for you
+                </h1>
 
-        {results.length === 0 ? (
-          <div className="bg-white border border-gray-200 rounded-2xl p-10 text-center text-muted">
-            No strong matches found — try different answers, or browse the full
-            collection.
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {results.map((r) => (
-              <Link
-                key={r.id}
-                href={`/plants/${r.id}`}
-                className="bg-white border border-gray-200 rounded-2xl p-4 hover:shadow-md transition-all"
+                <p className="text-muted mt-2">
+                  Based on your lifestyle, space and growing conditions.
+                </p>
+              </div>
+
+              <button
+                onClick={handleRestart}
+                className="
+              bg-white
+              border border-green-200
+              text-primary
+              px-5 py-2.5
+              rounded-full
+              text-sm
+              font-semibold
+              hover:bg-green-50
+              transition
+            "
               >
-                <div className="flex justify-between items-start mb-2">
-                  <div>
-                    <h3 className="font-semibold text-gray-900">
-                      {r.commonName}
-                    </h3>
-                    <p className="italic text-xs text-muted">
-                      {r.botanicalName}
-                    </p>
-                  </div>
+                ↻ Restart
+              </button>
+            </div>
 
-                  <span className="text-sm font-bold text-primary">
-                    {r.matchScore}%
-                  </span>
-                </div>
+            {results.length === 0 ? (
+              <div
+                className="
+            bg-white/80
+            backdrop-blur
+            border border-green-100
+            rounded-3xl
+            p-12
+            text-center
+          "
+              >
+                <div className="text-5xl mb-4">🌿</div>
+                <p className="text-gray-700">No strong matches yet.</p>
+                <p className="text-sm text-muted mt-2">
+                  Try adjusting your preferences.
+                </p>
+              </div>
+            ) : (
+              <div className="grid md:grid-cols-2 gap-5">
+                {results.map((r) => (
+                  <Link
+                    key={r.id}
+                    href={`/plants/${r.id}`}
+                    className="
+                  group
+                  bg-white/80
+                  backdrop-blur
+                  border border-green-100
+                  rounded-3xl
+                  p-6
+                  hover:-translate-y-1
+                  hover:shadow-xl
+                  hover:shadow-green-900/10
+                  transition-all
+                "
+                  >
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <h3
+                          className="
+                      text-xl
+                      font-bold
+                      text-gray-900
+                      group-hover:text-primary
+                    "
+                        >
+                          {r.commonName}
+                        </h3>
 
-                <div className="space-y-1">
-                  {r.reasons.map((reason, i) => (
-                    <p key={i} className="text-xs text-gray-600">
-                      ✓ {reason}
-                    </p>
-                  ))}
-                </div>
-              </Link>
-            ))}
+                        <p className="italic text-sm text-muted">
+                          {r.botanicalName}
+                        </p>
+                      </div>
+
+                      <div
+                        className="
+                    bg-green-100
+                    text-green-700
+                    rounded-full
+                    px-4 py-2
+                    font-bold
+                  "
+                      >
+                        {r.matchScore}%
+                      </div>
+                    </div>
+
+                    <div
+                      className="
+                  mt-5
+                  space-y-2
+                "
+                    >
+                      {r.reasons.map((reason, i) => (
+                        <div
+                          key={i}
+                          className="
+                        flex gap-2
+                        text-sm
+                        text-gray-700
+                        bg-green-50
+                        rounded-xl
+                        px-3 py-2
+                      "
+                        >
+                          <span>🌱</span>
+                          {reason}
+                        </div>
+                      ))}
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            )}
           </div>
-        )}
+        </div>
       </main>
     );
   }
@@ -223,9 +305,25 @@ export default function RecommendationsPage() {
           <span>{Math.round(((step + 1) / steps.length) * 100)}%</span>
         </div>
 
-        <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+        <div
+          className="
+h-3
+bg-green-100
+rounded-full
+overflow-hidden
+shadow-inner
+"
+        >
           <div
-            className="h-full bg-primary transition-all duration-300"
+            className="
+h-full
+bg-gradient-to-r
+from-green-500
+to-emerald-400
+rounded-full
+transition-all
+duration-500
+"
             style={{
               width: `${((step + 1) / steps.length) * 100}%`,
             }}
@@ -233,9 +331,7 @@ export default function RecommendationsPage() {
         </div>
       </div>
 
-      <h1 className="text-2xl font-bold text-gray-900 mb-1">
-        {current.title}
-      </h1>
+      <h1 className="text-2xl font-bold text-gray-900 mb-1">{current.title}</h1>
 
       <p className="text-muted text-sm mb-6">{current.subtitle}</p>
 
@@ -249,11 +345,23 @@ export default function RecommendationsPage() {
             <button
               key={opt.value}
               onClick={() => handleSelect(opt.value)}
-              className={`w-full text-left px-5 py-4 rounded-xl border-2 transition-colors ${
-                isSelected
-                  ? "border-primary bg-primary/5"
-                  : "border-gray-200 hover:border-gray-300"
-              }`}
+              className={`
+
+w-full
+text-left
+px-5
+py-5
+rounded-2xl
+border-2
+font-medium
+transition-all
+duration-200
+
+${
+  isSelected
+    ? "border-primary bg-primary/5"
+    : "border-gray-200 hover:border-gray-300"
+}`}
             >
               {opt.label}
             </button>
@@ -281,11 +389,10 @@ export default function RecommendationsPage() {
           {loading
             ? "Finding matches..."
             : step === steps.length - 1
-            ? "Get My Recommendations"
-            : "Continue →"}
+              ? "Get My Recommendations"
+              : "Continue →"}
         </button>
       </div>
     </main>
   );
 }
-

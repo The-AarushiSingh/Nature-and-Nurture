@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Plant = require("../models/Plant");
-
+const cosineSimilarity = require("../utils/similarity");
 // GET all plants (supports optional search & filters later)
 // GET all plants (supports search & filters via query params)
 function regexIn(values) {
@@ -56,6 +56,29 @@ router.post("/", async (req, res) => {
     res.status(201).json(savedPlant);
   } catch (err) {
     res.status(400).json({ error: err.message });
+  }
+});
+
+
+router.get("/:id/similar", async (req, res) => {
+  try {
+    const target = await Plant.findById(req.params.id);
+    if (!target || !target.embedding?.length) {
+      return res.json([]);
+    }
+
+    const allPlants = await Plant.find({ _id: { $ne: target._id } });
+
+    const scored = allPlants
+      .filter((p) => p.embedding?.length > 0)
+      .map((p) => ({ plant: p, score: cosineSimilarity(target.embedding, p.embedding) }))
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 4)
+      .map((s) => s.plant);
+
+    res.json(scored);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 });
 
