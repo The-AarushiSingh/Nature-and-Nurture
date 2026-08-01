@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import { logActivity } from "@/utils/logActivity";
 
-const tabs = ["Overview", "Medicinal Uses", "Care Guide", "Compounds", "Safety"];
+const tabs = ["Overview", "Cultivation Guide", "Medicinal Uses", "Care Guide", "Compounds", "Safety"];
 
 const levelMaps = {
   sunlight: { "Low": 1, "Partial Shade": 2, "Full Sun to Partial Shade": 2, "Full Sun": 3 },
@@ -29,6 +29,8 @@ export default function PlantProfile() {
   const { token, user } = useAuth();
   const [plant, setPlant] = useState(null);
   const [similar, setSimilar] = useState([]);
+  const [guide, setGuide] = useState(null);
+const [guideLoading, setGuideLoading] = useState(false);
   const [loading, setLoading] = useState(true);
   const [saved, setSaved] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -76,6 +78,19 @@ export default function PlantProfile() {
 
   if (loading) return <p className="p-10 text-muted">Loading plant...</p>;
   if (!plant) return <p className="p-10 text-muted">Plant not found.</p>;
+
+  const loadGuide = async () => {
+  setGuideLoading(true);
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/plants/${id}/guide`);
+    const data = await res.json();
+    setGuide(Array.isArray(data) ? data : []);
+  } catch {
+    setGuide([]);
+  } finally {
+    setGuideLoading(false);
+  }
+};
 
   return (
     <main className="min-h-screen bg-cream">
@@ -202,6 +217,42 @@ export default function PlantProfile() {
                   </p>
                 </div>
               )}
+              {activeTab === "Cultivation Guide" && (
+  <div>
+    {!guide && !guideLoading && (
+      <div className="text-center py-8">
+        <p className="text-sm text-muted mb-4">
+          A step-by-step growing guide, written specifically for beginners.
+        </p>
+        <button onClick={loadGuide} className="bg-primary text-white rounded-full px-6 py-2.5 font-bold hover:bg-primary-light transition-colors">
+          Generate Guide
+        </button>
+      </div>
+    )}
+    {guideLoading && <p className="text-sm text-muted text-center py-8">Building your guide...</p>}
+    {guide && guide.length > 0 && (
+      <div className="space-y-5">
+        {guide.map((phase, i) => (
+          <div key={i} className="flex gap-4">
+            <div className="flex flex-col items-center">
+              <div className="w-8 h-8 rounded-full bg-primary text-white text-xs font-bold flex items-center justify-center shrink-0">{i + 1}</div>
+              {i < guide.length - 1 && <div className="w-0.5 flex-1 bg-primary/20 mt-1" />}
+            </div>
+            <div className="pb-5">
+              <p className="text-xs text-gold font-bold uppercase tracking-wide">{phase.duration}</p>
+              <p className="font-bold text-gray-900 text-sm mb-1.5">{phase.phase}: {phase.title}</p>
+              <ul className="space-y-1">
+                {phase.steps?.map((step, j) => (
+                  <li key={j} className="text-xs text-gray-600 flex gap-1.5"><span className="text-sage">•</span> {step}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        ))}
+      </div>
+    )}
+  </div>
+)}
             </div>
 
             {/* Real AI CTA instead of fabricated summary */}

@@ -81,5 +81,42 @@ router.get("/:id/similar", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+router.get("/:id/guide", async (req, res) => {
+  try {
+    const plant = await Plant.findById(req.params.id);
+    if (!plant) return res.status(404).json({ error: "Plant not found" });
+
+    if (plant.cultivationGuide?.length > 0) {
+      return res.json(plant.cultivationGuide);
+    }
+
+    const { GoogleGenerativeAI } = require("@google/generative-ai");
+    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+    const model = genAI.getGenerativeModel({ model: "gemini-3.5-flash-lite" });
+
+    const prompt = `
+Create a beginner-friendly, step-by-step cultivation guide for growing ${plant.commonName} (${plant.botanicalName}) at home.
+Known care info: Sunlight - ${plant.careGuide?.sunlight}, Water - ${plant.careGuide?.water}, Soil - ${plant.careGuide?.soil}, Difficulty - ${plant.careGuide?.difficulty}, Climate - ${plant.careGuide?.climate?.join(", ")}, Harvest time - ${plant.careGuide?.harvestTime}.
+
+Respond with ONLY valid JSON (no markdown fences) as an array of 5-6 phases in this exact shape:
+[
+  { "phase": "Planting", "duration": "Week 1", "title": "string", "steps": ["string", "string", "string"] }
+]
+Cover: getting started/planting, early growth care, ongoing maintenance, common issues to watch for, and harvest/maturity. Keep steps practical and specific to this plant, assuming zero prior gardening experience.
+    `.trim();
+
+    const result = await model.generateContent(prompt);
+    let text = result.response.text().trim().replace(/^```json\s*/, "").replace(/```$/, "").trim();
+    const guide = JSON.parse(text);
+
+    plant.cultivationGuide = guide;
+    await plant.save();
+
+    res.json(guide);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Could not generate cultivation guide." });
+  }
+});
 
 module.exports = router;

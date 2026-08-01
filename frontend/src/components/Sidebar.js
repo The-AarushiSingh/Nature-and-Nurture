@@ -12,12 +12,13 @@ const navItems = [
   { label: "Disease Diagnosis", href: "/diagnosis", icon: "🩺" },
   { label: "My Garden", href: "/garden", icon: "💚" },
   { label: "Compare Plants", href: "/compare", icon: "📊" },
+  { label: "Nursery Locator", href: "/nursery", icon: "📍" }, // New item
 ];
 
 export default function Sidebar() {
   const pathname = usePathname();
-  const { user, logout } = useAuth();
   const router = useRouter();
+  const { user, logout } = useAuth();
 
   const handleLogout = () => {
     logout();
@@ -26,49 +27,67 @@ export default function Sidebar() {
 
   return (
     <aside className="w-64 bg-white border-r border-gray-200 h-screen sticky top-0 flex flex-col">
+      {/* Logo */}
       <div className="p-5 border-b border-gray-100">
         <Link href="/dashboard" className="flex items-center gap-2">
-          <img src="/images/logo.png" alt="Nature & Nurture" className="w-8 h-8 rounded-lg" />
-          <span className="font-bold text-primary" style={{ fontFamily: "var(--font-display)" }}>
+          <img
+            src="/images/logo.png"
+            alt="Nature & Nurture"
+            className="w-8 h-8 rounded-lg"
+          />
+          <span
+            className="font-bold text-primary"
+            style={{ fontFamily: "var(--font-display)" }}
+          >
             Nature <span className="font-normal text-muted">&</span> Nurture
           </span>
         </Link>
       </div>
 
+      {/* User */}
       <div className="p-5 border-b border-gray-100 flex items-center gap-3">
         <div className="w-9 h-9 rounded-full bg-gold flex items-center justify-center text-white font-bold text-sm">
           {user?.name?.[0] || "U"}
         </div>
+
         <div>
-          <p className="font-semibold text-gray-900 text-sm">{user?.name}</p>
+          <p className="font-semibold text-gray-900 text-sm">
+            {user?.name}
+          </p>
           <p className="text-xs text-muted">Member</p>
         </div>
       </div>
 
+      {/* Navigation */}
       <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
         {navItems.map((item) => {
           const active = pathname === item.href;
+
           return (
             <Link
               key={item.href}
               href={item.href}
               className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-                active ? "bg-primary/10 text-primary" : "text-gray-700 hover:bg-gray-50"
+                active
+                  ? "bg-primary/10 text-primary"
+                  : "text-gray-700 hover:bg-gray-50"
               }`}
             >
-              <span>{item.icon}</span>
-              {item.label}
+              <span className="text-lg">{item.icon}</span>
+              <span>{item.label}</span>
             </Link>
           );
         })}
       </nav>
 
+      {/* Logout */}
       <div className="p-3 border-t border-gray-100">
         <button
           onClick={handleLogout}
-          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-700 hover:bg-gray-50"
+          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-700 hover:bg-gray-50 transition-colors"
         >
-          <span>🚪</span> Sign Out
+          <span className="text-lg">🚪</span>
+          <span>Sign Out</span>
         </button>
       </div>
     </aside>
