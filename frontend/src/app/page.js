@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Footer from "@/components/Footer";
 import Link from "next/link";
+import { useAuth } from "@/context/AuthContext";
 
 const categories = [
   "Immunity",
@@ -78,6 +79,7 @@ export default function LandingPage() {
   const [featuredPlants, setFeaturedPlants] = useState([]);
   const [openFaq, setOpenFaq] = useState(null);
   const router = useRouter();
+  const { user } = useAuth();
 
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/plants`)
@@ -108,7 +110,6 @@ export default function LandingPage() {
                 "NEEM नीम",
                 "GILOY गिलोय",
                 "AMLA आंवला",
-
                 "MINT पुदीना",
                 "CILANTRO धनिया",
                 "THYME थाइम",
@@ -119,7 +120,6 @@ export default function LandingPage() {
                 "LEMONGRASS लेमनग्रास",
                 "OREGANO ऑरेगैनो",
                 "BASIL बेसिल",
-
                 "GINGER अदरक",
                 "GARLIC लहसुन",
                 "FENNEL सौंफ",
@@ -358,7 +358,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Honest stats */}
       {/* Honest stats — collage badges instead of a boring row */}
       <section className="max-w-5xl mx-auto px-6 py-20">
         <div className="grid grid-cols-3 gap-6">
@@ -398,7 +397,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Features grid */}
       {/* Features grid — sticker-style cards */}
       <section className="max-w-6xl mx-auto px-6 py-24 bg-white">
         <div className="text-center mb-14">
@@ -432,7 +430,7 @@ export default function LandingPage() {
               <Link
                 key={f.title}
                 href={f.href}
-                className={`bg-cream border-2 border-primary/10 rounded-3xl p-7 ${tilt} hover:rotate-0 hover:-translate-y-2 hover:shadow-[0_25px_50px_-15px_rgba(31,61,43,0.3)] transition-all duration-300`}
+                className={`group bg-cream border-2 border-primary/10 rounded-3xl p-7 ${tilt} hover:rotate-0 hover:-translate-y-2 hover:shadow-[0_25px_50px_-15px_rgba(31,61,43,0.3)] transition-all duration-300`}
               >
                 <div
                   className={`w-14 h-14 rounded-2xl ${badge} flex items-center justify-center text-2xl mb-5 rotate-6 shadow-md border-2 border-white`}
@@ -455,231 +453,232 @@ export default function LandingPage() {
             );
           })}
         </div>
-        {/* RAG Assistant deep-dive */}
-        <section className="max-w-6xl mx-auto px-6 py-20">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div className="bg-white border-2 border-primary/10 rounded-3xl shadow-xl p-5 -rotate-1">
-              <div className="flex items-center gap-2 mb-4">
-                <div className="w-7 h-7 bg-primary rounded-full flex items-center justify-center text-white text-xs">
-                  🤖
-                </div>
-                <p className="text-sm font-bold text-primary">Nature AI</p>
-                <span className="ml-auto text-[10px] text-green-600 font-semibold">
-                  ● Online
+      </section>
+
+      {/* RAG Assistant deep-dive */}
+      <section className="max-w-6xl mx-auto px-6 py-20">
+        <div className="grid md:grid-cols-2 gap-12 items-center">
+          <div className="bg-white border-2 border-primary/10 rounded-3xl shadow-xl p-5 -rotate-1">
+            <div className="flex items-center gap-2 mb-4">
+              <div className="w-7 h-7 bg-primary rounded-full flex items-center justify-center text-white text-xs">
+                🤖
+              </div>
+              <p className="text-sm font-bold text-primary">Nature AI</p>
+              <span className="ml-auto text-[10px] text-green-600 font-semibold">
+                ● Online
+              </span>
+            </div>
+            <div className="bg-primary text-white text-sm rounded-2xl rounded-tr-sm px-4 py-2.5 mb-3 ml-auto w-fit max-w-[85%]">
+              Can Tulsi grow indoors?
+            </div>
+            <div className="bg-cream text-sm text-gray-700 rounded-2xl rounded-tl-sm px-4 py-3 max-w-[92%] leading-relaxed">
+              Yes — Tulsi (तुलसी) does well indoors with full sun exposure,
+              moderate watering, and loamy soil. It's rated "Easy" difficulty
+              with a fast growth rate.
+              <div className="flex gap-1.5 mt-2">
+                <span className="text-xs bg-gold/20 text-gold font-semibold px-2 py-0.5 rounded-full">
+                  Holy Basil
                 </span>
               </div>
-              <div className="bg-primary text-white text-sm rounded-2xl rounded-tr-sm px-4 py-2.5 mb-3 ml-auto w-fit max-w-[85%]">
-                Can Tulsi grow indoors?
-              </div>
-              <div className="bg-cream text-sm text-gray-700 rounded-2xl rounded-tl-sm px-4 py-3 max-w-[92%] leading-relaxed">
-                Yes — Tulsi (तुलसी) does well indoors with full sun exposure,
-                moderate watering, and loamy soil. It's rated "Easy" difficulty
-                with a fast growth rate.
-                <div className="flex gap-1.5 mt-2">
-                  <span className="text-xs bg-gold/20 text-gold font-semibold px-2 py-0.5 rounded-full">
-                    Holy Basil
-                  </span>
-                </div>
-              </div>
             </div>
+          </div>
 
+          <div>
+            <span className="inline-block bg-primary/10 text-primary text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full rotate-1 mb-4">
+              RAG-Powered AI
+            </span>
+            <h2
+              className="text-3xl font-bold text-primary mb-4"
+              style={{ fontFamily: "var(--font-display)" }}
+            >
+              Your personal <span className="text-gold">plant herbalist</span>
+            </h2>
+            <p className="text-gray-600 mb-6 leading-relaxed">
+              Every answer is retrieved from our own curated plant database
+              first, then used to ground the AI's response — not pulled from
+              general internet knowledge.
+            </p>
+            <div className="space-y-4 mb-8">
+              {[
+                {
+                  icon: "📚",
+                  title: "Cited Knowledge Base",
+                  desc: "Every response links back to real plants in our database.",
+                },
+                {
+                  icon: "🎯",
+                  title: "Semantic Retrieval",
+                  desc: "Finds relevant plants by meaning, not just keyword matching.",
+                },
+                {
+                  icon: "🌐",
+                  title: "Culturally Aware",
+                  desc: "Includes Hindi names and India-relevant plants throughout.",
+                },
+              ].map((item) => (
+                <div key={item.title} className="flex gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-sage/25 flex items-center justify-center text-lg shrink-0">
+                    {item.icon}
+                  </div>
+                  <div>
+                    <p className="font-bold text-primary text-sm">
+                      {item.title}
+                    </p>
+                    <p className="text-xs text-gray-600">{item.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <Link
+              href="/assistant"
+              className="inline-block bg-primary text-white rounded-full px-6 py-3 font-bold hover:bg-primary-light transition-colors"
+            >
+              Chat with AI →
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Recommendations wizard preview */}
+      <section className="bg-white py-20">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
-              <span className="inline-block bg-primary/10 text-primary text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full rotate-1 mb-4">
-                RAG-Powered AI
+              <span className="inline-block bg-gold/15 text-gold text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full -rotate-1 mb-4">
+                Personalized Wizard
               </span>
               <h2
                 className="text-3xl font-bold text-primary mb-4"
                 style={{ fontFamily: "var(--font-display)" }}
               >
-                Your personal <span className="text-gold">plant herbalist</span>
+                Find your perfect{" "}
+                <span className="text-sage">healing plants</span>
               </h2>
               <p className="text-gray-600 mb-6 leading-relaxed">
-                Every answer is retrieved from our own curated plant database
-                first, then used to ground the AI's response — not pulled from
-                general internet knowledge.
+                Answer a few quick questions about your climate, space, and
+                goals — get ranked matches with the real reasoning behind each
+                one.
               </p>
-              <div className="space-y-4 mb-8">
+              <div className="grid grid-cols-2 gap-3 mb-8">
                 {[
-                  {
-                    icon: "📚",
-                    title: "Cited Knowledge Base",
-                    desc: "Every response links back to real plants in our database.",
-                  },
-                  {
-                    icon: "🎯",
-                    title: "Semantic Retrieval",
-                    desc: "Finds relevant plants by meaning, not just keyword matching.",
-                  },
-                  {
-                    icon: "🌐",
-                    title: "Culturally Aware",
-                    desc: "Includes Hindi names and India-relevant plants throughout.",
-                  },
+                  { icon: "🌍", label: "Climate & Space" },
+                  { icon: "☀️", label: "Sunlight" },
+                  { icon: "💪", label: "Maintenance" },
+                  { icon: "🎯", label: "Health Goals" },
                 ].map((item) => (
-                  <div key={item.title} className="flex gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-sage/25 flex items-center justify-center text-lg shrink-0">
-                      {item.icon}
-                    </div>
-                    <div>
-                      <p className="font-bold text-primary text-sm">
-                        {item.title}
-                      </p>
-                      <p className="text-xs text-gray-600">{item.desc}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <Link
-                href="/assistant"
-                className="inline-block bg-primary text-white rounded-full px-6 py-3 font-bold hover:bg-primary-light transition-colors"
-              >
-                Chat with AI →
-              </Link>
-            </div>
-          </div>
-        </section>
-
-        {/* Recommendations wizard preview */}
-        <section className="bg-white py-20">
-          <div className="max-w-6xl mx-auto px-6">
-            <div className="grid md:grid-cols-2 gap-12 items-center">
-              <div>
-                <span className="inline-block bg-gold/15 text-gold text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full -rotate-1 mb-4">
-                  Personalized Wizard
-                </span>
-                <h2
-                  className="text-3xl font-bold text-primary mb-4"
-                  style={{ fontFamily: "var(--font-display)" }}
-                >
-                  Find your perfect{" "}
-                  <span className="text-sage">healing plants</span>
-                </h2>
-                <p className="text-gray-600 mb-6 leading-relaxed">
-                  Answer a few quick questions about your climate, space, and
-                  goals — get ranked matches with the real reasoning behind each
-                  one.
-                </p>
-                <div className="grid grid-cols-2 gap-3 mb-8">
-                  {[
-                    { icon: "🌍", label: "Climate & Space" },
-                    { icon: "☀️", label: "Sunlight" },
-                    { icon: "💪", label: "Maintenance" },
-                    { icon: "🎯", label: "Health Goals" },
-                  ].map((item) => (
-                    <div
-                      key={item.label}
-                      className="bg-cream rounded-xl p-3 flex items-center gap-2 border border-primary/10"
-                    >
-                      <span>{item.icon}</span>
-                      <span className="text-xs font-semibold text-primary">
-                        {item.label}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-                <Link
-                  href="/recommendations"
-                  className="inline-block bg-gold text-white rounded-full px-6 py-3 font-bold hover:opacity-90 transition-opacity"
-                >
-                  Start Recommendation Wizard →
-                </Link>
-              </div>
-
-              <div className="space-y-3">
-                {[
-                  {
-                    name: "Holy Basil",
-                    hindi: "तुलसी",
-                    tags: "Immunity · Stress · Respiratory",
-                    score: 96,
-                  },
-                  {
-                    name: "Peppermint",
-                    hindi: "पिपरमिंट",
-                    tags: "Digestion · Headache",
-                    score: 88,
-                  },
-                  {
-                    name: "Aloe Vera",
-                    hindi: "घृतकुमारी",
-                    tags: "Skin Care · Digestion",
-                    score: 82,
-                  },
-                ].map((p, i) => (
                   <div
-                    key={p.name}
-                    className={`bg-white border-2 border-primary/10 rounded-2xl p-4 flex items-center justify-between shadow-md ${
-                      i % 2 === 0 ? "rotate-1" : "-rotate-1"
-                    } hover:rotate-0 transition-transform duration-300`}
+                    key={item.label}
+                    className="bg-cream rounded-xl p-3 flex items-center gap-2 border border-primary/10"
                   >
-                    <div>
-                      <p className="font-bold text-primary text-sm">
-                        {p.name} · {p.hindi}
-                      </p>
-                      <p className="text-xs text-gray-500">{p.tags}</p>
-                    </div>
-                    <span className="text-lg font-bold text-gold">
-                      {p.score}%
+                    <span>{item.icon}</span>
+                    <span className="text-xs font-semibold text-primary">
+                      {item.label}
                     </span>
                   </div>
                 ))}
               </div>
+              <Link
+                href="/recommendations"
+                className="inline-block bg-gold text-white rounded-full px-6 py-3 font-bold hover:opacity-90 transition-opacity"
+              >
+                Start Recommendation Wizard →
+              </Link>
             </div>
-          </div>
-        </section>
 
-        {/* Plant ID showcase */}
-        <section className="max-w-6xl mx-auto px-6 py-20">
-          <div className="bg-primary rounded-[2.5rem] p-12 relative overflow-hidden">
-            <div className="grid md:grid-cols-2 gap-10 items-center relative z-10">
-              <div>
-                <span className="inline-block bg-white/15 text-white text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full rotate-1 mb-4">
-                  AI Vision
-                </span>
-                <h2
-                  className="text-3xl font-bold text-white mb-4"
-                  style={{ fontFamily: "var(--font-display)" }}
+            <div className="space-y-3">
+              {[
+                {
+                  name: "Holy Basil",
+                  hindi: "तुलसी",
+                  tags: "Immunity · Stress · Respiratory",
+                  score: 96,
+                },
+                {
+                  name: "Peppermint",
+                  hindi: "पिपरमिंट",
+                  tags: "Digestion · Headache",
+                  score: 88,
+                },
+                {
+                  name: "Aloe Vera",
+                  hindi: "घृतकुमारी",
+                  tags: "Skin Care · Digestion",
+                  score: 82,
+                },
+              ].map((p, i) => (
+                <div
+                  key={p.name}
+                  className={`bg-white border-2 border-primary/10 rounded-2xl p-4 flex items-center justify-between shadow-md ${
+                    i % 2 === 0 ? "rotate-1" : "-rotate-1"
+                  } hover:rotate-0 transition-transform duration-300`}
                 >
-                  Identify any plant
-                  <br />
-                  <span className="text-gold">from a single photo</span>
-                </h2>
-                <p className="text-white/70 mb-6 leading-relaxed">
-                  Upload any plant photo — our AI identifies the species,
-                  cross-checks our database, and gives you Hindi names and care
-                  details instantly.
-                </p>
-                <Link
-                  href="/plant-id"
-                  className="inline-block bg-white text-primary rounded-full px-6 py-3 font-bold hover:scale-105 transition-transform duration-200"
-                >
-                  Try Plant ID →
-                </Link>
-              </div>
-              <div className="bg-white/10 backdrop-blur border-2 border-dashed border-white/30 rounded-2xl p-8 text-center rotate-1">
-                <p className="text-white/60 text-sm mb-3">
-                  📷 Drop a photo or browse
-                </p>
-                <div className="bg-white/90 rounded-xl p-3 text-left mt-4">
-                  <p className="text-primary font-bold text-sm">
-                    Peacock Plant
-                  </p>
-                  <p className="text-gray-500 text-xs italic">
-                    Goeppertia makoyana · 88% match
-                  </p>
+                  <div>
+                    <p className="font-bold text-primary text-sm">
+                      {p.name} · {p.hindi}
+                    </p>
+                    <p className="text-xs text-gray-500">{p.tags}</p>
+                  </div>
+                  <span className="text-lg font-bold text-gold">
+                    {p.score}%
+                  </span>
                 </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Plant ID showcase */}
+      <section className="max-w-6xl mx-auto px-6 py-20">
+        <div className="bg-primary rounded-[2.5rem] p-12 relative overflow-hidden">
+          <div className="grid md:grid-cols-2 gap-10 items-center relative z-10">
+            <div>
+              <span className="inline-block bg-white/15 text-white text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full rotate-1 mb-4">
+                AI Vision
+              </span>
+              <h2
+                className="text-3xl font-bold text-white mb-4"
+                style={{ fontFamily: "var(--font-display)" }}
+              >
+                Identify any plant
+                <br />
+                <span className="text-gold">from a single photo</span>
+              </h2>
+              <p className="text-white/70 mb-6 leading-relaxed">
+                Upload any plant photo — our AI identifies the species,
+                cross-checks our database, and gives you Hindi names and care
+                details instantly.
+              </p>
+              <Link
+                href="/plant-id"
+                className="inline-block bg-white text-primary rounded-full px-6 py-3 font-bold hover:scale-105 transition-transform duration-200"
+              >
+                Try Plant ID →
+              </Link>
+            </div>
+            <div className="bg-white/10 backdrop-blur border-2 border-dashed border-white/30 rounded-2xl p-8 text-center rotate-1">
+              <p className="text-white/60 text-sm mb-3">
+                📷 Drop a photo or browse
+              </p>
+              <div className="bg-white/90 rounded-xl p-3 text-left mt-4">
+                <p className="text-primary font-bold text-sm">
+                  Peacock Plant
+                </p>
+                <p className="text-gray-500 text-xs italic">
+                  Goeppertia makoyana · 88% match
+                </p>
               </div>
             </div>
-            <p
-              className="absolute -bottom-10 -right-6 text-[9rem] font-bold text-white/5 select-none pointer-events-none leading-none"
-              style={{ fontFamily: "var(--font-display)" }}
-            >
-              ID
-            </p>
           </div>
-        </section>
+          <p
+            className="absolute -bottom-10 -right-6 text-[9rem] font-bold text-white/5 select-none pointer-events-none leading-none"
+            style={{ fontFamily: "var(--font-display)" }}
+          >
+            ID
+          </p>
+        </div>
       </section>
-      {/* Why this exists — honest, instead of fake testimonials */}
+
       {/* Why this exists */}
       <section className="relative bg-primary overflow-hidden">
         <div className="max-w-3xl mx-auto px-6 py-24 text-center relative z-10">
@@ -708,7 +707,6 @@ export default function LandingPage() {
         </p>
       </section>
 
-      {/* FAQ — real, honest answers */}
       {/* FAQ */}
       <section className="max-w-3xl mx-auto px-6 py-24">
         <div className="text-center mb-12">
@@ -767,10 +765,10 @@ export default function LandingPage() {
             Free to get started. No credit card required.
           </p>
           <Link
-            href="/login"
+            href={user ? "/dashboard" : "/login"}
             className="inline-block bg-white text-primary rounded-full px-8 py-3.5 font-bold hover:scale-105 transition-transform duration-200"
           >
-            Get Started Free →
+            {user ? "Go to Dashboard" : "Get Started Free"}
           </Link>
         </div>
       </section>
