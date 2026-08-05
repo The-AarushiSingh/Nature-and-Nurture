@@ -4,6 +4,7 @@ import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 
+
 const filterGroups = [
   { key: "category", label: "Category", options: ["Immunity", "Stress Relief", "Digestion", "Culinary", "Skin Care", "Respiratory", "Sleep", "Cognitive", "Energy", "Hormonal", "Anti-inflammatory", "Blood Sugar"] },
   { key: "climate", label: "Climate", options: ["Tropical", "Subtropical", "Temperate", "Arid", "Mediterranean", "Alpine", "Arctic"] },
@@ -33,7 +34,8 @@ function ExploreContent() {
   const [search, setSearch] = useState(searchParams.get("search") || "");
   const [sort, setSort] = useState("relevance");
   const [savedIds, setSavedIds] = useState(new Set());
-
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [allPlants, setAllPlants] = useState([]);
   const [filters, setFilters] = useState(() => {
     const initial = {};
     filterGroups.forEach((g) => (initial[g.key] = []));
@@ -107,6 +109,21 @@ function ExploreContent() {
     });
   };
 
+  useEffect(() => {
+  fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/plants`)
+    .then((res) => res.json())
+    .then((data) => setAllPlants(data))
+    .catch(() => {});
+}, []);
+
+  const suggestions =
+  search.trim().length > 0
+    ? allPlants
+        .filter((p) =>
+          p.commonName.toLowerCase().includes(search.toLowerCase())
+        )
+        .slice(0, 6)
+    : [];
   return (
     <main className="min-h-screen bg-cream">
       <div className="max-w-7xl mx-auto px-6 py-10 flex gap-8">
@@ -147,13 +164,35 @@ function ExploreContent() {
         {/* Main content */}
         <div className="flex-1 min-w-0">
           <div className="flex flex-col sm:flex-row gap-3 mb-4">
-            <input
-              type="text"
-              placeholder="Search medicinal plants..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="flex-1 border-2 border-gray-200 rounded-full px-5 py-2.5 focus:outline-none focus:border-primary transition-colors"
-            />
+            <div className="relative flex-1">
+  <input
+    type="text"
+    placeholder="Search medicinal plants..."
+    value={search}
+    onChange={(e) => setSearch(e.target.value)}
+    onFocus={() => setShowSuggestions(true)}
+    onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
+    className="w-full border-2 border-gray-200 rounded-full px-5 py-2.5 focus:outline-none focus:border-primary transition-colors"
+  />
+
+  {showSuggestions && suggestions.length > 0 && (
+    <div className="absolute top-full left-0 right-0 mt-2 bg-white border-2 border-gray-100 rounded-2xl shadow-lg overflow-hidden z-30">
+      {suggestions.map((p) => (
+        <Link
+          key={p._id}
+          href={`/plants/${p._id}`}
+          className="flex items-center gap-3 px-4 py-2.5 hover:bg-cream transition-colors"
+        >
+          <span className="text-lg">🌿</span>
+          <div>
+            <p className="text-sm font-semibold text-gray-900">{p.commonName}</p>
+            {p.hindiName && <p className="text-xs text-muted">{p.hindiName}</p>}
+          </div>
+        </Link>
+      ))}
+    </div>
+  )}
+</div>
             <div className="flex gap-2 flex-wrap">
               {sortOptions.map((s) => (
                 <button
